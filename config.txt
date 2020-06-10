@@ -1,0 +1,2 @@
+#Tipo de conta PRACTICE ou REAL	
+Conta=PRACTICE
