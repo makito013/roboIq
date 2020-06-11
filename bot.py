@@ -38,7 +38,6 @@ try:
 	minutoAtual = strftime("%M", localtime())
 	segundoAtual = strftime("%S", localtime())
 	print(horaAtual)
-	index = hora.index(horaAtual)
 	print(minuto[index])
 	#horaAtual = strftime("%H", localtime())
 except:
