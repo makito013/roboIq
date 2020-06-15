@@ -1,0 +1,21 @@
+
+13/06/2020, 22:50:00 - LOSS ==> Posição: putVelas: g,g,r,r,g|| Valor:1033.5290000000002
+13/06/2020, 22:50:01 - ABERTO MARTINGALE 1
+13/06/2020, 23:40:00 - WIN ==> Posição: call || Velas: gggrr|| Valor:927.6530000000001
+14/06/2020, 00:40:00 - LOSS ==> Posição: putVelas: rggrg|| VelasFiltro: rrrrrgrggg || Valor:927.6530000000001
+14/06/2020, 00:40:01 - ABERTO MARTINGALE 1
+14/06/2020, 00:45:00 - WIN ==> Posição: put || Velas: rggrg|| Valor:927.6530000000001
+14/06/2020, 01:50:00 - LOSS ==> Posição: callVelas: grrgr|| VelasFiltro: gggrrrggrg || Valor:1077.2520000000002
+14/06/2020, 01:50:01 - ABERTO MARTINGALE 1
+14/06/2020, 01:55:00 - WIN ==> Posição: call || Velas: grrgr|| Valor:1077.2520000000002
+14/06/2020, 02:07:00 - WIN ==> Posição: call || Velas: grrrg|| Valor:1041.463
+14/06/2020, 02:26:00 - LOSS ==> Posição: callVelas: rgrrg|| VelasFiltro: gdgrrgrggr || Valor:1132.17
+14/06/2020, 02:26:03 - ABERTO MARTINGALE 1
+14/06/2020, 02:27:00 - LOSS ==> Posição: callVelas: rgrrg|| VelasFiltro: gdgrrgrggr || Valor:1132.17
+14/06/2020, 04:06:00 - LOSS ==> Posição: callVelas: rggrr|| VelasFiltro: grrgrgrgrggggrgrggrr || Valor:792.519
+14/06/2020, 04:06:02 - ABERTO MARTINGALE 1
+14/06/2020, 04:07:02 - WIN ==> Posição: call || Velas: rggrr|| Valor:792.519
+14/06/2020, 05:26:03 - WIN ==> Posição: put || Velas: rggrg|| Valor:792.519
+14/06/2020, 06:56:00 - LOSS ==> Posição: callVelas: rggrr|| VelasFiltro: grrgrgggggggrrggrgrg || Valor:792.519
+14/06/2020, 06:56:02 - ABERTO MARTINGALE 1
+14/06/2020, 06:57:00 - LOSS ==> Posição: callVelas: rggrr|| VelasFiltro: grrgrgggggggrrggrgrg || Valor:792.519

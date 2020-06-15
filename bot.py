@@ -1,63 +1,45 @@
 from iqoptionapi.stable_api import IQ_Option
 from time import localtime, strftime
-from biblioteca.conecta import *
+from biblioteca.conecta import conecta, carregaConfig, leituraLista
+from biblioteca.estrategias import MHI
+import sys
+import _thread
+import time
+
+#Variaveis Globais
+ganhoTotal = 0
 
 #Conexão API
 API = IQ_Option('bandradest@gmail.com', 'Bruno9107')
 API.connect()
 rec = 0
 
-#Variaveis
-#arquivo = ['19:40,USDCAD,PUT', '10:41,USDCAD,PUT', '10:49,USDCAD,PUT']
-arquivo = open('lista.txt', 'r')
-hora = []
-minuto = []
-par = []
-posicao = []
-i = 0
-horaAtual = strftime("%H", localtime())
-minutoAtual = strftime("%M", localtime())
-segundoAtual = strftime("%S", localtime())
-print("Aguarde... \r")
-print(" -------  LENDO LISTA DE SINAIS  --------- \r")
-#Lê arquivo
-for linha in arquivo:
-	if linha[0] != '#':
-		separado = linha.split(',')
-		time = separado[0].split(':')
-		hora.append(time[0])
-		minuto.append(time[1])
-		par.append(separado[1])
-		posicao.append(separado[2])
-		i = i + 1
-#arquivo.close()
-
-#verifica hora atual#horaAtual = ""
-try:
-	horaAtual = strftime("%H", localtime())
-	minutoAtual = strftime("%M", localtime())
-	segundoAtual = strftime("%S", localtime())
-	print(horaAtual)
-	print(minuto[index])
-	#horaAtual = strftime("%H", localtime())
-except:
-	print("Nenhuma posição para a hora atual")
-
 #While
 load = '|'
 configurado = False
 tempAnterior = strftime("%S", localtime())
+tempMinAnterior = strftime("%M", localtime())
+config = {}
+lista = {}
+
 while True:
 	if API.check_connect() == False:
 		conecta(API)
-	else:
+	else:		
 		if configurado == False:
 			print('####  Conectado com sucesso  ########')
 			print('####  Carregando Configuracao  ########')
-			carregaConfig(API)
+			config = carregaConfig(API)
+			if config["Lista"] == 'S':
+				lista = leituraLista()
 			configurado = True
+
+			if config['MHI'] == 'S':
+				temp = MHI(API, config)
+				_thread.start_new_thread(temp.str, ())
+				#threadMHI.join()
 		else:
-			segundoAtual = strftime("%S", localtime())
+			segundoAtual = strftime("%S", localtime())				
 			if tempAnterior != segundoAtual:
 				if load == '|':
 					load = '/'
@@ -69,7 +51,22 @@ while True:
 					load = '|'
 
 				tempAnterior = segundoAtual
-				minutoAtual = strftime("%M", localtime())
+				MinutoAtual = strftime("%M", localtime())
 				horaAtual = strftime("%H", localtime())
-				print(load, ' - ', horaAtual,':', minutoAtual, ':', segundoAtual, end="\r")
-	
+				MHITemp = '- MHI Esta procurando oportunidade' if config['MHI'] == 'S' else ''
+				print(load, ' - ', horaAtual,':', MinutoAtual, ':', segundoAtual, MHITemp, end="\r")
+
+				if tempMinAnterior != MinutoAtual:
+					tempMinAnterior = MinutoAtual
+					montanteAtual = API.get_balance()
+					if config['StopGain'] <= montanteAtual:
+						print()
+						print('###### PARABENS STOP GAIN ########## \n TOTAL GANHO:',montanteAtual)
+						#input('\n Aperte qualquer tecla para finalizar')
+						break
+						#sys.exit()
+					elif config['StopLoss'] >= montanteAtual + config['ValorNegociacao']:
+						print()
+						print('###### OPS STOP TENTE OUTRO DIA ########## \n TOTAL DA BANCA:',montanteAtual)
+						#input('\n Aperte qualquer tecla para finalizar')
+						break
