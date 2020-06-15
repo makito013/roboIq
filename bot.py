@@ -27,6 +27,10 @@ while True:
 		conecta(API)
 	else:		
 		if configurado == False:
+			print(API.get_digital_current_profit('USDCHF', 5))
+			d = API.get_all_profit()
+			print(d["CADCHF"]["turbo"])
+			
 			print('####  Conectado com sucesso  ########')
 			print('####  Carregando Configuracao  ########')
 			config = carregaConfig(API)

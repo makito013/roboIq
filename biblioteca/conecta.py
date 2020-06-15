@@ -62,8 +62,8 @@ def carregaConfig(API):
                     config['MiniVela'] = linhaConfig[1]
                 elif linhaConfig[0] == 'HumorTraders':
                     config['HumorTraders'] = linhaConfig[1]
-                elif linhaConfig[0] == 'porcetagemHumor':
-                    config['porcetagemHumor'] = int(linhaConfig[1].rstrip('%'))
+                elif linhaConfig[0] == 'PorcentagemHumor':
+                    config['PorcentagemHumor'] = int(linhaConfig[1].rstrip('%'))
                 elif linhaConfig[0] == 'Delay':
                     config['Delay'] = int(linhaConfig[1]) / 100
 
@@ -76,9 +76,9 @@ def carregaConfig(API):
         print('StopLoss: ', config['StopLoss'])
         print('ValorNegociação: ', config['ValorNegociacao'])
         print('MHI: ', textTmp(config['MHI']))
-        print('FiltroMHIbot: ', textTmp(config['FiltroMHIbot']))
+        print('MiniVela: ', textTmp(config['MiniVela']))
         print('HumorTraders: ', textTmp(config['HumorTraders']))
-        print('porcetagemHumor: ', config['porcetagemHumor'])
+        print('PorcentagemHumor: ', config['PorcentagemHumor'])
         print('Lista: ', textTmp(config['Lista']))
         print('==========  CONFIGURAÇÃO CARREGADA COM SUCESSO ==========')
         print()

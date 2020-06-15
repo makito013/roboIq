@@ -4,7 +4,7 @@ from biblioteca.diversos import salvaTransacaoTXT
 from biblioteca import banca
 from datetime import datetime
 import time
-from biblioteca.estrategias import indicadores
+from biblioteca.indicadores import indicadores
 
 def lista(sinais, config):
     #index = 0;

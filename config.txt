@@ -27,9 +27,9 @@ Lista=S
 
 
 #Indicadores
-MiniVela=S6
+MiniVela=S
 HumorTraders=S
 
 #Configuração do Humor
 #Abrir posicao somente quando o humor do trader estiver x% ou mais a favor da operação
-porcetagemHumor:70%
+PorcentagemHumor=70%
