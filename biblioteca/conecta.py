@@ -110,7 +110,7 @@ def leituraLista():
     #Lê arquivo
     try:
         criaTabela()
-        conn = sqlite3.connect(':memory:')
+        conn = sqlite3.connect('robot')
         cursor = conn.cursor()
         for linha in arquivo:
             if linha[0] != '#':
@@ -120,19 +120,20 @@ def leituraLista():
                 separado = linha.split(',')
                 time = separado[0].split(':')
                 if int(time[0])+ int(time[1]) == 0:
-                    print('Sinal a maie noite não é permitido')
+                    print('Sinal a meia noite não é permitido')
                 else:    
                     #mmdd.hhmm
-                    cursor.execute("INSERT INTO lista (hora, minuto, par, tempo, operation)VALUES ("+int(time[0])+",'"+int(time[1])+"','"+separado[1]+"', "+int(separado[3])+",'"+separado[2]+"'")
-                    str_date = datetime.now()
-                    date = datetime.strptime(str_date, '%d/%m-%H:%M')
-                    print(date - timedelta(minutes=1), type(date))
-                    temp = {'hora':[], 'minuto':[], 'par':[], 'posicao':[], 'tempo':[]}
-                    sinais['hora'].append(int(time[0]))
-                    sinais['minuto'].append(int(time[1]))
-                    sinais['par'].append(separado[1])
-                    sinais['posicao'].append(separado[2])
-                    sinais['tempo'].append(separado[3])
+                    comando =  "INSERT INTO lista (id, hora, minuto, par, tempo, operation) VALUES ("+str(i)+","+str(int(time[0]))+","+time[1]+",'"+separado[1]+"',"+separado[2]+",'"+separado[3]+"')"
+                    cursor.execute(comando)
+                    #str_date = datetime.now()
+                    #date = datetime.strptime(str_date, '%d/%m-%H:%M')
+                    #print(date - timedelta(minutes=1), type(date))
+                    #temp = {'hora':[], 'minuto':[], 'par':[], 'posicao':[], 'tempo':[]}
+                    #sinais['hora'].append(int(time[0]))
+                    #sinais['minuto'].append(int(time[1]))
+                    #sinais['par'].append(separado[1])
+                    #sinais['posicao'].append(separado[2])
+                    #sinais['tempo'].append(separado[3])
                 i = i + 1
         arquivo.close()
         conn.commit()

@@ -24,14 +24,14 @@ def salvaOperacaoNaoAbertaTXT(texto):
 
 def criaTabela():
     # conectando...
-    conn = sqlite3.connect(':memory:')
+    conn = sqlite3.connect('robot')
     # definindo um cursor
     cursor = conn.cursor()
 
     # criando a tabela (schema)
     cursor.execute("""
     CREATE TABLE lista (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            id INTEGER NOT NULL PRIMARY KEY,
             hora INTEGER,
             minuto INTEGER,
             par TEXT,
