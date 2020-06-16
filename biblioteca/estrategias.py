@@ -21,18 +21,19 @@ def lista(sinais, config):
         #index = hora.index(horaAtual)
 
 
-class MHI ():
+class estrategias ():
     def __init__(self, API, config):
         ''' Construtor '''
         self.API = API
         self.config = config
+        self.indicadores = indicadores(API, config)
 
-    def str(self):
+    def MHI(self):
         API = self.API
         config = self.config
         par = 'EURJPY-OTC'
         tempoDelay = 0
-        filtroIndi = indicadores(API, config)
+        filtroIndi = self.indicadores
 
         if config['Delay'] != 0:
             tempoDelay = 10 - config['Delay']
@@ -102,3 +103,19 @@ class MHI ():
                         print('\nErro ao abrir posição\n')
                 else:
                     print('\nMHI Posição não aberta Velas: ', velasLog, ' Filtro: ',  coresFiltro ,'\n') 
+
+    def lista(self, lista):
+        print(lista)
+        tempoDelay = 0
+        if self.config['Delay'] != 0:
+            tempoDelay = 10 - self.config['Delay']
+        
+        while True:
+            hora = float((datetime.now()).strftime('%H'))
+            minutos = float(((datetime.now()).strftime('%M.%S'))[1:])
+            entrar = True if (minutos >= (5 - self.config['Delay']) and minutos <= 5) or minutos >= tempoDelay else False
+            
+            if hora in lista['hora'] or hora in lista['hora']:
+                print('Achei Hora')
+            #if entrar:
+

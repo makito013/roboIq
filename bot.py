@@ -1,9 +1,9 @@
 from iqoptionapi.stable_api import IQ_Option
 from time import localtime, strftime
 from biblioteca.conecta import conecta, carregaConfig, leituraLista
-from biblioteca.estrategias import MHI
+from biblioteca.estrategias import estrategias
 import sys
-import _thread
+import threading
 import time
 
 #Variaveis Globais
@@ -21,7 +21,8 @@ tempAnterior = strftime("%S", localtime())
 tempMinAnterior = strftime("%M", localtime())
 config = {}
 lista = {}
-
+t = {}
+e = {}
 while True:
 	if API.check_connect() == False:
 		conecta(API)
@@ -37,11 +38,13 @@ while True:
 			if config["Lista"] == 'S':
 				lista = leituraLista()
 			configurado = True
-
+			e = estrategias(API, config)
 			if config['MHI'] == 'S':
-				temp = MHI(API, config)
-				_thread.start_new_thread(temp.str, ())
-				#threadMHI.join()
+				t['MHI'] = threading.Thread(target=e.MHI, args=())
+				t['MHI'].start()
+			if config['Lista'] == 'S':
+				t['Lista'] = threading.Thread(target=e.MHI, args=())
+				t['Lista'].start()
 		else:
 			segundoAtual = strftime("%S", localtime())				
 			if tempAnterior != segundoAtual:

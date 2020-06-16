@@ -1,4 +1,7 @@
 from time import localtime, strftime
+from datetime import datetime, timedelta
+from biblioteca.diversos import criaTabela
+import sqlite3
 
 #Função de conexão
 def conecta(API):
@@ -93,7 +96,8 @@ def leituraLista():
     #Variaveis
     #arquivo = ['19:40,USDCAD,PUT', '10:41,USDCAD,PUT', '10:49,USDCAD,PUT']
     arquivo = open('lista.txt', 'r')
-    sinais = {'hora':[], 'minuto':[], 'par':[], 'posicao':[]}
+    #sinais = []
+    sinais = {'hora':[], 'minuto':[], 'par':[], 'posicao':[], 'tempo':[]}
     #hora = []
     #minuto = []
     #par = []
@@ -105,18 +109,35 @@ def leituraLista():
     print(" -------  LENDO LISTA DE SINAIS  --------- \r")
     #Lê arquivo
     try:
+        criaTabela()
+        conn = sqlite3.connect(':memory:')
+        cursor = conn.cursor()
         for linha in arquivo:
             if linha[0] != '#':
                 linha = linha.rstrip('\n')
+                linha = linha.rstrip(' ')
                 print(linha)
                 separado = linha.split(',')
                 time = separado[0].split(':')
-                sinais['hora'].append(time[0])
-                sinais['minuto'].append(time[1])
-                sinais['par'].append(separado[1])
-                sinais['posicao'].append(separado[2])
+                if int(time[0])+ int(time[1]) == 0:
+                    print('Sinal a maie noite não é permitido')
+                else:    
+                    #mmdd.hhmm
+                    cursor.execute("INSERT INTO lista (hora, minuto, par, tempo, operation)VALUES ("+int(time[0])+",'"+int(time[1])+"','"+separado[1]+"', "+int(separado[3])+",'"+separado[2]+"'")
+                    str_date = datetime.now()
+                    date = datetime.strptime(str_date, '%d/%m-%H:%M')
+                    print(date - timedelta(minutes=1), type(date))
+                    temp = {'hora':[], 'minuto':[], 'par':[], 'posicao':[], 'tempo':[]}
+                    sinais['hora'].append(int(time[0]))
+                    sinais['minuto'].append(int(time[1]))
+                    sinais['par'].append(separado[1])
+                    sinais['posicao'].append(separado[2])
+                    sinais['tempo'].append(separado[3])
                 i = i + 1
         arquivo.close()
+        conn.commit()
+        print('Dados inseridos com sucesso.')
+        conn.close()
         print()
         print(" -------  LISTA CARREGADA COM SUCESSO  --------- \r")
         return sinais

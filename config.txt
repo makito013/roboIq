@@ -5,6 +5,7 @@ Conta=PRACTICE
 ValorNegociacao=10%
 
 #Valor de delay para abertura de negociação (Valor em segundos) - Este valor varia a depender da velocidade de sua internet
+#maximo = 15
 Delay=1
 
 #Quantidade máxima de Martingale

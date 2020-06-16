@@ -28,7 +28,7 @@ class indicadores ():
         velaFiltro = API.get_candles(par, 15, 20, time.time())
         
         i = 0
-        
+        coresFiltro = ''
         for x in velaFiltro:
             coresFiltro += 'g' if x['open'] < x['close'] else 'r' if x['open'] > x['close'] else 'd'                 
             i = i + 1
