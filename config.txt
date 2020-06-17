@@ -22,6 +22,9 @@ StopGain=50%
 #(Porcentagem se refere no valor da banca inicial e não no valor total)
 StopLoss=40%
 
+#porcentagem minima de payout
+Payout=80%
+
 #Estratégias
 MHI=S
 Lista=S

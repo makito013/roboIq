@@ -29,6 +29,7 @@ def criaTabela():
     cursor = conn.cursor()
 
     # criando a tabela (schema)
+    cursor.execute("DROP TABLE IF EXISTS lista")
     cursor.execute("""
     CREATE TABLE lista (
             id INTEGER NOT NULL PRIMARY KEY,
@@ -43,3 +44,5 @@ def criaTabela():
     print('Tabela criada com sucesso.')
     # desconectando...
     conn.close()
+
+    

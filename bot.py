@@ -27,24 +27,20 @@ while True:
 	if API.check_connect() == False:
 		conecta(API)
 	else:		
-		if configurado == False:
-			print(API.get_digital_current_profit('USDCHF', 5))
-			d = API.get_all_profit()
-			print(d["CADCHF"]["turbo"])
-			
+		if configurado == False:						
 			print('####  Conectado com sucesso  ########')
 			print('####  Carregando Configuracao  ########')
-			config = carregaConfig(API)
-			if config["Lista"] == 'S':
-				lista = leituraLista()
+			config = carregaConfig(API)				
 			configurado = True
 			e = estrategias(API, config)
 			if config['MHI'] == 'S':
 				t['MHI'] = threading.Thread(target=e.MHI, args=())
 				t['MHI'].start()
 			if config['Lista'] == 'S':
-				t['Lista'] = threading.Thread(target=e.MHI, args=())
+				lista = leituraLista()
+				t['Lista'] = threading.Thread(target=e.lista, args=())
 				t['Lista'].start()
+			print('####  BUSCANDO OPORTUNIDADES  ########')
 		else:
 			segundoAtual = strftime("%S", localtime())				
 			if tempAnterior != segundoAtual:
@@ -61,7 +57,7 @@ while True:
 				MinutoAtual = strftime("%M", localtime())
 				horaAtual = strftime("%H", localtime())
 				MHITemp = '- MHI Esta procurando oportunidade' if config['MHI'] == 'S' else ''
-				print(load, ' - ', horaAtual,':', MinutoAtual, ':', segundoAtual, MHITemp, end="\r")
+				#print(load, ' - ', horaAtual,':', MinutoAtual, ':', segundoAtual, MHITemp, end="\r")
 
 				if tempMinAnterior != MinutoAtual:
 					tempMinAnterior = MinutoAtual

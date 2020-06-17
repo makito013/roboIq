@@ -1,25 +1,12 @@
 sinaisPreparados = {'hora':[], 'minuto':[], 'par':[], 'sinal':[]}
 from time import localtime, strftime
-from biblioteca.diversos import salvaTransacaoTXT
+from biblioteca.diversos import salvaTransacaoTXT, salvaOperacaoNaoAbertaTXT
 from biblioteca import banca
 from datetime import datetime
 import time
 from biblioteca.indicadores import indicadores
-
-def lista(sinais, config):
-    #index = 0;
-    #verifica hora atual#horaAtual = ""
-    horaAtual = strftime("%H", localtime())
-    #minutoAtual = strftime("%M", localtime())
-    #segundoAtual = strftime("%S", localtime())
-    if horaAtual in sinais['hora']:
-        #i = 0
-        for horaTemp in sinais['hora']:
-            if horaTemp == horaAtual:
-                sinaisPreparados['hora'].append(horaTemp)
-
-        #index = hora.index(horaAtual)
-
+import sqlite3
+import threading
 
 class estrategias ():
     def __init__(self, API, config):
@@ -104,18 +91,91 @@ class estrategias ():
                 else:
                     print('\nMHI Posição não aberta Velas: ', velasLog, ' Filtro: ',  coresFiltro ,'\n') 
 
-    def lista(self, lista):
-        print(lista)
-        tempoDelay = 0
-        if self.config['Delay'] != 0:
-            tempoDelay = 10 - self.config['Delay']
+    def lista(self):
+        listaAguardando = []
+        
+
         
         while True:
-            hora = float((datetime.now()).strftime('%H'))
-            minutos = float(((datetime.now()).strftime('%M.%S'))[1:])
-            entrar = True if (minutos >= (5 - self.config['Delay']) and minutos <= 5) or minutos >= tempoDelay else False
+            #Timer Hora
+            #A cada hora atualiza a lista
+            _hat = int((datetime.now()).strftime('%H'))
+            _han = 0
+            if _hat != _han:
+                _han = _hat
+                conn = sqlite3.connect('robot')
+                cursor = conn.cursor()
+                cursor.execute("SELECT minuto, par, tempo, operation FROM lista WHERE Hora = " + (datetime.now()).strftime('%H'))
+               
+
+                for linha in cursor.fetchall():
+                    listaAguardando.append(linha)
+
+                cursor.execute("DELETE FROM lista WHERE Hora = " + (datetime.now()).strftime('%H'))
+                conn.commit()
+                conn.close()
+            #Timer Segundo
+
+            #Timer Minuto
+            _mat = int((datetime.now()).strftime('%M'))
+            _man = False
+            if _mat != _man:
+                _man = _mat
+
+                i = 0
+                for posicoes in listaAguardando:
+                    if int(posicoes[0]) == _man:
+                        t = threading.Thread(target=self.threadAbrePosicao, args=(posicoes))
+                        t.start()
+                        listaAguardando.pop(i)
+                    i = i + 1
             
-            if hora in lista['hora'] or hora in lista['hora']:
-                print('Achei Hora')
+
+            #minutos = float(((datetime.now()).strftime('%M.%S'))[1:])
+            #entrar = True if (minutos >= (5 - self.config['Delay']) and minutos <= 5) or minutos >= tempoDelay else False
+            
+            #if hora in lista['hora'] or hora in lista['hora']:
+            #    print('Achei Hora')
             #if entrar:
+    
+    def threadAbrePosicao(self, minuto, par, tempo, operation):
+        _db = False
+        if tempo < 15:
+            binario = 0
+            digital = 0
+            
+            digital = self.API.get_digital_current_profit(par, tempo)
+            d = self.API.get_all_profit()
+            binario = d[par]["turbo"]
+            print(binario)
+
+            if digital == False:
+                print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção digital')
+                salvaOperacaoNaoAbertaTXT('- Par '+par+' Não Disponível na opção digital')
+                digital = 0
+            
+            if binario == {}:
+                print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção binario')
+                salvaOperacaoNaoAbertaTXT('- Par '+par+' Não Disponível na opção binario')
+                binario = 0
+
+            if digital == 0 and binario == 0:
+                print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Posição não pode ser aberta pois par não se encontra disponível')
+                salvaOperacaoNaoAbertaTXT('- Posição não pode ser aberta pois par não se encontra disponível')
+                return
+            else:
+                if digital > binario:
+                    if digital >= self.config['Payout']:
+                        print('Dentro do payout')
+                    else:
+                        print('Negociação não foi aberta? Par fora do payout')
+                        return
+                else:
+                    if binario >= self.config['Payout']:
+                        print('Dentro do payout')
+                    else:
+                        print('Negociação não foi aberta? Par fora do payout')
+                        return
+
+           # print(minuto, par, tempo, operation)
 

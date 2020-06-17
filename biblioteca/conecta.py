@@ -69,6 +69,8 @@ def carregaConfig(API):
                     config['PorcentagemHumor'] = int(linhaConfig[1].rstrip('%'))
                 elif linhaConfig[0] == 'Delay':
                     config['Delay'] = int(linhaConfig[1]) / 100
+                elif linhaConfig[0] == 'Payout':
+                    config['Payout'] = float(linhaConfig[1].rstrip('%'))
 
                 i = i + 1
                 #print('==========  (',i/total*100,'% ) ==========', end="\r")
@@ -81,7 +83,8 @@ def carregaConfig(API):
         print('MHI: ', textTmp(config['MHI']))
         print('MiniVela: ', textTmp(config['MiniVela']))
         print('HumorTraders: ', textTmp(config['HumorTraders']))
-        print('PorcentagemHumor: ', config['PorcentagemHumor'])
+        print('Porcentagem Humor: ', config['PorcentagemHumor'])
+        print('Payout Minimo: ', config['Payout'])
         print('Lista: ', textTmp(config['Lista']))
         print('==========  CONFIGURAÇÃO CARREGADA COM SUCESSO ==========')
         print()
@@ -123,11 +126,12 @@ def leituraLista():
                     print('Sinal a meia noite não é permitido')
                 else:    
                     #mmdd.hhmm
-                    comando =  "INSERT INTO lista (id, hora, minuto, par, tempo, operation) VALUES ("+str(i)+","+str(int(time[0]))+","+time[1]+",'"+separado[1]+"',"+separado[2]+",'"+separado[3]+"')"
+                    date = datetime.strptime(time[0]+':'+time[1], '%H:%M')
+                    date = date - timedelta(minutes=1)
+                    horaString = date.strftime('%H')
+                    minutoString = date.strftime('%M')
+                    comando =  "INSERT INTO lista (id, hora, minuto, par, tempo, operation) VALUES ("+str(i)+","+horaString+","+minutoString+",'"+separado[1]+"',"+separado[2]+",'"+separado[3]+"')"
                     cursor.execute(comando)
-                    #str_date = datetime.now()
-                    #date = datetime.strptime(str_date, '%d/%m-%H:%M')
-                    #print(date - timedelta(minutes=1), type(date))
                     #temp = {'hora':[], 'minuto':[], 'par':[], 'posicao':[], 'tempo':[]}
                     #sinais['hora'].append(int(time[0]))
                     #sinais['minuto'].append(int(time[1]))
