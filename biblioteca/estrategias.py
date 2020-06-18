@@ -105,7 +105,7 @@ class estrategias ():
                 _han = _hat
                 conn = sqlite3.connect('robot')
                 cursor = conn.cursor()
-                cursor.execute("SELECT minuto, par, tempo, operation FROM lista WHERE Hora = " + (datetime.now()).strftime('%H'))
+                cursor.execute("SELECT hora, minuto, par, tempo, operation FROM lista WHERE Hora = " + (datetime.now()).strftime('%H'))
                
 
                 for linha in cursor.fetchall():
@@ -124,7 +124,7 @@ class estrategias ():
 
                 i = 0
                 for posicoes in listaAguardando:
-                    if int(posicoes[0]) == _man:
+                    if int(posicoes[1]) == _man:
                         t = threading.Thread(target=self.threadAbrePosicao, args=(posicoes))
                         t.start()
                         listaAguardando.pop(i)
@@ -138,7 +138,21 @@ class estrategias ():
             #    print('Achei Hora')
             #if entrar:
     
-    def threadAbrePosicao(self, minuto, par, tempo, operation):
+    def threadAbrePosicao(self, hora, minuto, par, tempo, operation):
+        tipoOperacao = self.verificaPayout(par, tempo)
+        
+        if tipoOperacao != False
+            
+            while True:
+                _tabertura = datetime.strptime(hora+':'minuto, '%H:%M')
+                _tabertura = _tabertura + timedelta(minutes=1)
+                _tabertura = float(_tabertura.strftime('%H%M.%S'))
+                _tatual = float((datetime.now()).strftime('%H%M.%S'))                
+                entrar = True if (minutos >= (5 - config['Delay']) and minutos <= 5) or minutos >= tempoDelay else False
+                status,id = API.buy_digital_spot(par, config['ValorNegociacao'], dir, 1)
+            
+    
+    def verificaPayout(self, par, tempo):
         _db = False
         if tempo < 15:
             binario = 0
@@ -162,20 +176,21 @@ class estrategias ():
             if digital == 0 and binario == 0:
                 print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Posição não pode ser aberta pois par não se encontra disponível')
                 salvaOperacaoNaoAbertaTXT('- Posição não pode ser aberta pois par não se encontra disponível')
-                return
+                return False
             else:
                 if digital > binario:
                     if digital >= self.config['Payout']:
-                        print('Dentro do payout')
+                        return 'digital'
                     else:
-                        print('Negociação não foi aberta? Par fora do payout')
-                        return
+                        print('Negociação não foi aberta: Par fora do payout')
+                        return False
                 else:
                     if binario >= self.config['Payout']:
                         print('Dentro do payout')
+                        return 'binario'
                     else:
-                        print('Negociação não foi aberta? Par fora do payout')
-                        return
+                        print('Negociação não foi aberta: Par fora do payout')
+                        return False
 
            # print(minuto, par, tempo, operation)
 
