@@ -273,3 +273,38 @@
 17/06/2020, 01:05:02 - - Par USDJPY Não Disponível na opção digital
 17/06/2020, 01:05:03 - - Par USDJPY Não Disponível na opção digital
 17/06/2020, 01:12:22 - - Par USDJPY Não Disponível na opção digital
+19/06/2020, 00:25:05 - Humor dos traders abaixo do programado
+19/06/2020, 00:25:06 - Humor dos traders abaixo do programado
+19/06/2020, 00:29:08 - - Par EURUSD Não Disponível na opção digital
+19/06/2020, 00:29:08 - - Par USDBRL Não Disponível na opção digital
+19/06/2020, 00:29:09 - - Par USDBRL Não Disponível na opção binario
+19/06/2020, 00:29:09 - - Posição não pode ser aberta pois par não se encontra disponível
+19/06/2020, 00:30:05 - - Par GBPUSD Não Disponível na opção digital
+19/06/2020, 00:30:58 - - Par GBPUSD Não Disponível na opção digital
+19/06/2020, 00:35:00 - Indicador Minivela não permitiu operação
+19/06/2020, 00:35:01 - Indicador Minivela não permitiu operação
+19/06/2020, 00:45:00 - Indicador Minivela não permitiu operação
+19/06/2020, 00:45:01 - Indicador Minivela não permitiu operação
+19/06/2020, 00:50:15 - - Par EURUSD Não Disponível na opção digital
+19/06/2020, 00:50:15 - - Par EURUSD Não Disponível na opção binario
+19/06/2020, 00:50:15 - - Posição não pode ser aberta pois EURUSD não se encontra disponível
+19/06/2020, 00:53:33 - - Par USDJPY Não Disponível na opção digital
+19/06/2020, 00:53:33 - - Par EURUSD Não Disponível na opção digital
+19/06/2020, 00:53:34 - - Par USDJPY Não Disponível na opção binario
+19/06/2020, 00:53:34 - - Par EURUSD Não Disponível na opção binario
+19/06/2020, 00:53:34 - - Posição não pode ser aberta pois EURUSD não se encontra disponível
+19/06/2020, 00:53:34 - - Posição não pode ser aberta pois USDJPY não se encontra disponível
+19/06/2020, 00:55:00 - Indicador Minivela não permitiu operação
+19/06/2020, 00:55:01 - Indicador Minivela não permitiu operação
+19/06/2020, 01:03:12 - - Par EURUSD Não Disponível na opção digital
+19/06/2020, 01:03:12 - - Par EURUSD Não Disponível na opção binario
+19/06/2020, 01:03:12 - - Posição não pode ser aberta pois EURUSD não se encontra disponível
+19/06/2020, 01:03:41 - - Par EURUSD Não Disponível na opção digital
+19/06/2020, 01:03:41 - - Par EURUSD Não Disponível na opção binario
+19/06/2020, 01:03:42 - - Posição não pode ser aberta pois EURUSD não se encontra disponível
+19/06/2020, 01:05:00 - Indicador Minivela não permitiu operação
+19/06/2020, 01:05:01 - Indicador Minivela não permitiu operação
+19/06/2020, 01:05:05 - Indicador Minivela não permitiu operação
+19/06/2020, 01:05:15 - - Par USDJPY Não Disponível na opção digital
+19/06/2020, 01:05:15 - - Par USDJPY Não Disponível na opção binario
+19/06/2020, 01:05:15 - - Posição não pode ser aberta pois USDJPY não se encontra disponível

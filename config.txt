@@ -4,12 +4,20 @@ Conta=PRACTICE
 #Valor das negociações utilizar % para porcentagem ou $ para valor fixo separado por . exemplo (10.1% ou 1200.8$)
 ValorNegociacao=10%
 
+#Delay
 #Valor de delay para abertura de negociação (Valor em segundos) - Este valor varia a depender da velocidade de sua internet
 #maximo = 15
-Delay=1
 
-#Quantidade máxima de Martingale
+
+#Configuracoes da lista
 Martingale=1
+DelayMartingale=0
+Delay=2
+
+
+#Configuracoes MHI
+MartingaleMHI=1
+DelayMHI=2
 
 #Executar operações em OTC?
 OTC=S
@@ -23,7 +31,7 @@ StopGain=50%
 StopLoss=40%
 
 #porcentagem minima de payout
-Payout=80%
+Payout=50%
 
 #Estratégias
 MHI=S
