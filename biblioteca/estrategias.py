@@ -9,10 +9,11 @@ import sqlite3
 import threading
 
 class estrategias ():
-    def __init__(self, API, config):
+    def __init__(self, API, config, paresId):
         ''' Construtor '''
         self.API = API
         self.config = config
+        self.paresId = paresId
         self.indicadores = indicadores(API, config)
 
     def MHI(self):
@@ -205,49 +206,59 @@ class estrategias ():
 
     
     def verificaPayout(self, par, tempo):
-        _db = False
-    
-        binario = 0
-        digital = 0
+        try:
+            _db = False
         
-        #digital = self.API.get_digital_current_profit(par, tempo)
-        d = self.API.get_all_open_time()
-        #binario = d['digital]['GBPUSD']["turbo"]
-        digital = d['digital']['GBPUSD']["open"]
-        binario = d['turbo']['GBPUSD']["open"]
-        if tempo < 15:
             binario = False
-            
-        if digital == False:
-            print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção digital')
-            salvaOperacaoNaoAbertaTXT('- Par '+par+' Não Disponível na opção digital')
-            digital = 0
-        
-        if binario == False:
-            print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção binario')
-            salvaOperacaoNaoAbertaTXT('- Par '+par+' Não Disponível na opção binario')
-            binario = 0
+            digital = False
+            _vBinario = 0    
+            _vDigital = 0 
+            parId = self.paresId[par]
+            self.API.subscribe_strike_list(par, tempo)
+            digital = self.API.get_digital_current_profit(par, tempo) * 100
+            b = {}
 
-        if digital == 0 and binario == 0:
-            print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Posição não pode ser aberta pois par', par ,' não se encontra disponível')
-            salvaOperacaoNaoAbertaTXT('- Posição não pode ser aberta pois '+par+' não se encontra disponível')
-            return False
-        else:
-            if digital > binario:
-                if digital >= self.config['Payout']:
-                    return 'digital'
-                else:
-                    print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Negociação não foi aberta: Par', par ,'fora do payout')
-                    salvaOperacaoNaoAbertaTXT('Negociação não foi aberta: Par '+ par +' fora do payout')
-                    return False
+            if tempo > 5:
+                binario = False
             else:
-                if binario >= self.config['Payout']:
-                    #print('Dentro do payout')
-                    return 'binario'
+                b = self.API.get_all_init()
+                b = b['result']['turbo']['actives']
+                binario = b[str(parId)]['enabled']
+
+            if digital == 0:
+                print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção digital')
+                salvaOperacaoNaoAbertaTXT('- Par '+par+' Não Disponível na opção digital')
+                _vDigital = 0
+            
+            if binario == False:
+                print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção binario')
+                salvaOperacaoNaoAbertaTXT('- Par '+par+' Não Disponível na opção binario')
+                _vBinario = 0
+            else:
+                _vBinario = 100 - b[str(parId)]['option']['profit']['commission']
+
+            if digital == False and binario == False:
+                print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Posição não pode ser aberta pois par', par ,' não se encontra disponível')
+                salvaOperacaoNaoAbertaTXT('- Posição não pode ser aberta pois '+par+' não se encontra disponível')
+                return False
+            else:
+                if digital >= _vBinario:
+                    if digital >= self.config['Payout']:
+                        return 'digital'
+                    else:
+                        print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Negociação não foi aberta: Par', par ,'fora do payout')
+                        salvaOperacaoNaoAbertaTXT('Negociação não foi aberta: Par '+ par +' fora do payout')
+                        return False
                 else:
-                    print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Negociação não foi aberta: Par', par ,'fora do payout')
-                    salvaOperacaoNaoAbertaTXT('Negociação não foi aberta: Par '+ par +' fora do payout')
-                    return False
-        
-           # print(minuto, par, tempo, operation)
+                    if _vBinario >= self.config['Payout']:
+                        #print('Dentro do payout')
+                        return 'binario'
+                    else:
+                        print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Negociação não foi aberta: Par', par ,'fora do payout')
+                        salvaOperacaoNaoAbertaTXT('Negociação não foi aberta: Par '+ par +' fora do payout')
+                        return False
+        except:
+            print('Ops, aconteceu algum erro ao abrir a negociação')
+            print('Par:',par, 'Tempo', tempo)
+            # print(minuto, par, tempo, operation)
 

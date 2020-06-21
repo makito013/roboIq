@@ -308,3 +308,41 @@
 19/06/2020, 01:05:15 - - Par USDJPY Não Disponível na opção digital
 19/06/2020, 01:05:15 - - Par USDJPY Não Disponível na opção binario
 19/06/2020, 01:05:15 - - Posição não pode ser aberta pois USDJPY não se encontra disponível
+20/06/2020, 15:39:06 - - Par USDBRL-OTC Não Disponível na opção binario
+20/06/2020, 15:39:06 - - Par USDJPY-OTC Não Disponível na opção binario
+20/06/2020, 15:39:06 - - Par EURUSD Não Disponível na opção digital
+20/06/2020, 15:39:06 - - Par EURUSD Não Disponível na opção digital
+20/06/2020, 15:39:06 - Negociação não foi aberta: Par USDJPY-OTC fora do payout
+20/06/2020, 15:39:06 - - Par EURUSD Não Disponível na opção binario
+20/06/2020, 15:39:06 - - Posição não pode ser aberta pois EURUSD não se encontra disponível
+20/06/2020, 15:40:04 - - Par USDJPY Não Disponível na opção digital
+20/06/2020, 15:40:04 - - Par USDJPY Não Disponível na opção binario
+20/06/2020, 15:40:04 - - Posição não pode ser aberta pois USDJPY não se encontra disponível
+20/06/2020, 15:45:00 - Indicador Minivela não permitiu operação
+20/06/2020, 15:45:01 - Indicador Minivela não permitiu operação
+20/06/2020, 15:48:19 - - Par USDJPY Não Disponível na opção digital
+20/06/2020, 15:48:46 - - Par USDJPY Não Disponível na opção binario
+20/06/2020, 15:48:46 - - Posição não pode ser aberta pois USDJPY não se encontra disponível
+20/06/2020, 15:59:04 - - Par GBPUSD Não Disponível na opção digital
+20/06/2020, 15:59:04 - - Par GBPUSD Não Disponível na opção binario
+20/06/2020, 15:59:04 - - Posição não pode ser aberta pois GBPUSD não se encontra disponível
+20/06/2020, 16:01:35 - - Par USDJPY-OTC Não Disponível na opção binario
+20/06/2020, 16:02:50 - - Par AUDCAD-OTC Não Disponível na opção binario
+20/06/2020, 16:14:04 - - Par AUDJPY Não Disponível na opção digital
+20/06/2020, 16:14:04 - - Par AUDJPY Não Disponível na opção binario
+20/06/2020, 16:14:04 - - Posição não pode ser aberta pois AUDJPY não se encontra disponível
+20/06/2020, 16:19:04 - - Par EURUSD Não Disponível na opção digital
+20/06/2020, 16:19:04 - - Par EURUSD Não Disponível na opção binario
+20/06/2020, 16:19:04 - - Posição não pode ser aberta pois EURUSD não se encontra disponível
+20/06/2020, 16:44:34 - - Par AUDCAD-OTC Não Disponível na opção digital
+20/06/2020, 16:46:25 - - Par AUDCAD-OTC Não Disponível na opção digital
+20/06/2020, 16:48:13 - - Par AUDCAD-OTC Não Disponível na opção digital
+20/06/2020, 22:29:44 - - Par USDJPY Não Disponível na opção digital
+20/06/2020, 22:29:48 - - Par USDJPY Não Disponível na opção binario
+20/06/2020, 22:29:50 - - Posição não pode ser aberta pois USDJPY não se encontra disponível
+20/06/2020, 22:31:16 - - Par AUDCAD-OTC Não Disponível na opção digital
+20/06/2020, 22:32:32 - - Par AUDCAD-OTC Não Disponível na opção digital
+20/06/2020, 22:34:30 - - Par AUDCAD-OTC Não Disponível na opção digital
+20/06/2020, 22:35:24 - - Par AUDCAD-OTC Não Disponível na opção digital
+20/06/2020, 22:35:30 - Negociação não foi aberta: Par AUDCAD-OTC fora do payout
+20/06/2020, 22:36:10 - - Par AUDCAD-OTC Não Disponível na opção digital

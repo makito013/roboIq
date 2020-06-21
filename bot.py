@@ -20,6 +20,7 @@ configurado = False
 tempAnterior = strftime("%S", localtime())
 tempMinAnterior = strftime("%M", localtime())
 config = {}
+paresId = {}
 lista = {}
 t = {}
 e = {}
@@ -27,12 +28,14 @@ while True:
 	if API.check_connect() == False:
 		conecta(API)
 	else:		
-		if configurado == False:						
+		if configurado == False:
 			print('####  Conectado com sucesso  ########')
 			print('####  Carregando Configuracao  ########')
-			config = carregaConfig(API)				
+			config, paresId = carregaConfig(API)		
+			if config == False:
+				break
 			configurado = True
-			e = estrategias(API, config)
+			e = estrategias(API, config, paresId)
 			if config['MHI'] == 'S':
 				t['MHI'] = threading.Thread(target=e.MHI, args=())
 				t['MHI'].start()

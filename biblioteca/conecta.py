@@ -24,7 +24,7 @@ def textTmp(text):
     return textoTemp
 
 def carregaConfig(API):
-    arquivo = open('config.txt', 'r')
+    arquivo = open('./config.txt', 'r')
     config = {'StopGain': '50%', 'StopLoss': '30%', 'MHI': 'S', 'Lista': 'S', 'TipoConta':''}
     balance = API.get_balance()
     try:
@@ -108,9 +108,14 @@ def carregaConfig(API):
         print('Carteira: R$', balance)
         print()
         arquivo.close()
-        return config
+
+        paresId = API.get_all_ACTIVES_OPCODE()
+
+        return (config, paresId)
     except:
         print('Arquivo de configuração não foi encontrado!')
+        return False, False
+        
 
 def leituraLista():
     #Variaveis
