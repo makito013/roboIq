@@ -1,0 +1,47 @@
+#Tipo de conta PRACTICE ou REAL	
+Conta=PRACTICE
+
+#Valor das negociações utilizar % para porcentagem ou $ para valor fixo separado por . exemplo (10.1% ou 1200.8$)
+ValorNegociacao=10%
+
+#Delay
+#Valor de delay para abertura de negociação (Valor em segundos) - Este valor varia a depender da velocidade de sua internet
+#maximo = 15
+
+
+#Configuracoes da lista
+Martingale=1
+DelayMartingale=0
+Delay=2
+
+
+#Configuracoes MHI
+MartingaleMHI=1
+DelayMHI=2
+
+#Executar operações em OTC?
+OTC=S
+
+#Valor total do Stop Gain utilizar mesma regra anterior quanto a porcentagem ou valor 
+#(Porcentagem se refere no valor da banca inicial e não no valor total)
+StopGain=50%
+
+#Valor total de Stop Loss utilizar mesma regra anterior quanto a porcentagem ou valor 
+#(Porcentagem se refere no valor da banca inicial e não no valor total)
+StopLoss=40%
+
+#porcentagem minima de payout
+Payout=50%
+
+#Estratégias
+MHI=S
+Lista=S
+
+
+#Indicadores
+MiniVela=S
+HumorTraders=S
+
+#Configuração do Humor
+#Abrir posicao somente quando o humor do trader estiver x% ou mais a favor da operação
+PorcentagemHumor=70%
