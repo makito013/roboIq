@@ -13,11 +13,12 @@ ValorNegociacao=10%
 Martingale=1
 DelayMartingale=0
 Delay=2
-
+Tendencia=S
 
 #Configuracoes MHI
 MartingaleMHI=1
 DelayMHI=2
+TendenciaMHI=S
 
 #Executar operações em OTC?
 OTC=S
@@ -45,3 +46,10 @@ HumorTraders=S
 #Configuração do Humor
 #Abrir posicao somente quando o humor do trader estiver x% ou mais a favor da operação
 PorcentagemHumor=70%
+
+#Analisador de tendencias
+#Configurações
+SMA=S
+MMA=N
+PeriodoSMA=14
+PeriodoMMA=100 

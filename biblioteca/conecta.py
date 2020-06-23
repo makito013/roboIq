@@ -76,6 +76,8 @@ def carregaConfig(API):
                     config['DelayMartingale'] = int(linhaConfig[1]) / 100
                 elif linhaConfig[0] == 'Payout':
                     config['Payout'] = float(linhaConfig[1].rstrip('%'))
+                elif linhaConfig[0] == 'PeriodoSMA':
+                    config['PeriodoSMA'] = int(linhaConfig[1])
 
                 i = i + 1
                 #print('==========  (',i/total*100,'% ) ==========', end="\r")
