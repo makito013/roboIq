@@ -67,20 +67,20 @@ class medias ():
         
         calculo_ema = abstract.EMA(valores, timeperiod=self.config['PeriodoSMA'])
         ultimo = len(calculo_ema)
-        ultimoCandle = 'call' if(valores['close'][ultimo-1] > valores['open'][ultimo-1]) else 'put'
+        ultimoCandle = 'CALL' if(valores['close'][ultimo-1] > valores['open'][ultimo-1]) else 'PUT'
         
 
-        if ultimoCandle == 'call' and valores['close'][ultimo-1] > calculo_ema[ultimo-1] and valores['open'][ultimo-1] < calculo_ema[ultimo-1]:
+        if ultimoCandle == 'CALL' and valores['close'][ultimo-1] > calculo_ema[ultimo-1] and valores['open'][ultimo-1] < calculo_ema[ultimo-1]:
             print('To no meio')
-            return 'neutro'
-        elif ultimoCandle == 'put' and valores['close'][ultimo-1] < calculo_ema[ultimo-1] and valores['open'][ultimo-1] > calculo_ema[ultimo-1]:
+            return 'NEUTRO'
+        elif ultimoCandle == 'PUT' and valores['close'][ultimo-1] < calculo_ema[ultimo-1] and valores['open'][ultimo-1] > calculo_ema[ultimo-1]:
             print('To no meio')
-            return 'neutro'
+            return 'NEUTRO'
         elif calculo_ema[ultimo-1] > valores['close'][ultimo-1]:
             print('tendencia de queda')
-            return 'put'
+            return 'PUT'
         elif calculo_ema[ultimo-1] < valores['close'][ultimo-1]:
             print('tendencia de alta')
-            return 'call'
+            return 'CALL'
 
         print(calculo_ema)

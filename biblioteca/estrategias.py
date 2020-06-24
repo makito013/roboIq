@@ -45,8 +45,8 @@ class estrategias ():
                 cores = velas[2] + velas[3] + velas[4]
                 velasLog = velas[0] + velas[1] + velas[2] + velas[3] + velas[4]
 
-                if cores.count('g') > cores.count('r') and cores.count('d') == 0 : dir = 'put' 
-                if cores.count('r') > cores.count('g') and cores.count('d') == 0 : dir = 'call'
+                if cores.count('g') > cores.count('r') and cores.count('d') == 0 : dir = 'PUT' 
+                if cores.count('r') > cores.count('g') and cores.count('d') == 0 : dir = 'CALL'
                 
                 if dir != False and filtroIndi.verificaIndicadores(par, dir) == False: 
                     dir = False
@@ -66,7 +66,7 @@ class estrategias ():
                                 #status, valor = API.check_win_digital_v2(id)
                                 valor = 0
                                 velas = API.get_candles(par, 60, 1, time.time())
-                                velas[0] = 'call' if velas[0]['open'] < velas[0]['close'] else 'put' if velas[0]['open'] > velas[0]['close'] else 'd'
+                                velas[0] = 'CALL' if velas[0]['open'] < velas[0]['close'] else 'PUT' if velas[0]['open'] > velas[0]['close'] else 'd'
                                 if velas[0] == dir:
                                     status, valor = False, False
                                     while not(status):
@@ -144,6 +144,8 @@ class estrategias ():
     
     def threadAbrePosicao(self, hora, minuto, par, tempo, operation):
         if self.medias.analisadorTendenciaLista(par, tempo, operation) == False:
+            linha = str(hora) + ':' + str(minuto) + ',' + par + ',' + str(tempo) + ',' + operation
+            salvaTransacaoTXT(linha + ' - Operação não realizada por estar contra a tendência')  
             return
 
         tipoOperacao = self.verificaPayout(par, tempo)
@@ -177,7 +179,7 @@ class estrategias ():
                             if _tatual >= _tfinal - self.config['DelayMartingale']:
                                 valor = 0
                                 velas = self.API.get_candles(par, 60 * tempo, 1, time.time())
-                                velas[0] = 'call' if velas[0]['open'] < velas[0]['close'] else 'put' if velas[0]['open'] > velas[0]['close'] else 'd'
+                                velas[0] = 'CALL' if velas[0]['open'] < velas[0]['close'] else 'PUT' if velas[0]['open'] > velas[0]['close'] else 'd'
                                 if velas[0] == operation:
                                     status, valor = False, False
                                     while not(status):
