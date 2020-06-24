@@ -145,7 +145,7 @@ class estrategias ():
     def threadAbrePosicao(self, hora, minuto, par, tempo, operation):
         if self.medias.analisadorTendenciaLista(par, tempo, operation) == False:
             linha = str(hora) + ':' + str(minuto) + ',' + par + ',' + str(tempo) + ',' + operation
-            salvaTransacaoTXT(linha + ' - Operação não realizada por estar contra a tendência')  
+            salvaOperacaoNaoAbertaTXT(linha + ' - Operação não realizada por estar contra a tendência')  
             return
 
         tipoOperacao = self.verificaPayout(par, tempo)

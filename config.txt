@@ -50,6 +50,6 @@ PorcentagemHumor=70%
 #Analisador de tendencias
 #Configurações
 SMA=S
-MMA=N
+EMA=N
 PeriodoSMA=14
 PeriodoEMA=100 

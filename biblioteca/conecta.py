@@ -82,7 +82,10 @@ def carregaConfig(API):
                     config['PeriodoSMA'] = int(linhaConfig[1])
                 elif linhaConfig[0] == 'PeriodoEMA':
                     config['PeriodoEMA'] = int(linhaConfig[1])
-
+                elif linhaConfig[0] == 'EMA':
+                    config['EMA'] = linhaConfig[1]
+                elif linhaConfig[0] == 'SMA':
+                    config['SMA'] = linhaConfig[1]
 
                 i = i + 1
                 #print('==========  (',i/total*100,'% ) ==========', end="\r")
@@ -111,6 +114,18 @@ def carregaConfig(API):
             print('Martingale: ', config['DelayMartingale'])
             print('Analise de Tendencia: ', textTmp(config['Tendencia']))
         
+        print('==========  CONFIGURAÇÃO Analisador de Tendencia ')
+        print('--- EMA ---')
+        print('EMA: ', textTmp(config['EMA']))
+        if config['EMA'] == 'S':
+            print('Periodo: ', config['PeriodoEMA'])
+        
+        print('--- SMA ---')
+        print('SMA: ', textTmp(config['SMA']))
+        if config['SMA'] == 'S':
+            print('Periodo: ', config['PeriodoSMA'])
+        
+
         print('==========  CONFIGURAÇÃO CARREGADA COM SUCESSO ==========')
         print()
         print('Carteira: R$', balance)
