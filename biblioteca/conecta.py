@@ -171,7 +171,7 @@ def leituraLista():
                 i = i + 1
         arquivo.close()
         conn.commit()
-        print('Dados inseridos com sucesso.')
+        #print('Dados inseridos com sucesso.')
         conn.close()
         print()
         print(" -------  LISTA CARREGADA COM SUCESSO  --------- \r")
