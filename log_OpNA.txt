@@ -358,3 +358,4 @@
 23/06/2020, 23:14:04 - - Par EURJPY Não Disponível na opção digital
 23/06/2020, 23:15:00 - Indicador Minivela não permitiu operação
 23/06/2020, 23:15:01 - Indicador Minivela não permitiu operação
+24/06/2020, 13:19:00 - 13:19,CADJPY,5,CALL - Operação não realizada por estar contra a tendência
