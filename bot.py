@@ -2,7 +2,6 @@ from iqoptionapi.stable_api import IQ_Option
 from time import localtime, strftime
 from biblioteca.conecta import conecta, carregaConfig, leituraLista
 from biblioteca.estrategias import estrategias
-from biblioteca.tendencias import medias
 import sys
 import threading
 import time
@@ -36,10 +35,7 @@ while True:
 			config, paresId = carregaConfig(API)		
 			if config == False:
 				break
-			configurado = True
-			e = medias(API, config)
-			t['Teste'] = threading.Thread(target=e.SMA, args=('USDJPY', 5))
-			t['Teste'].start()
+			configurado = True			
 			e = estrategias(API, config, paresId)
 			if config['MHI'] == 'S':
 				t['MHI'] = threading.Thread(target=e.MHI, args=())

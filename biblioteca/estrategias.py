@@ -1,6 +1,7 @@
 sinaisPreparados = {'hora':[], 'minuto':[], 'par':[], 'sinal':[]}
 from time import localtime, strftime
 from biblioteca.diversos import salvaTransacaoTXT, salvaOperacaoNaoAbertaTXT
+from biblioteca.tendencias import medias
 from biblioteca import banca
 from datetime import datetime, timedelta
 import time
@@ -15,6 +16,7 @@ class estrategias ():
         self.config = config
         self.paresId = paresId
         self.indicadores = indicadores(API, config)
+        self.medias = medias(API, config)
 
     def MHI(self):
         API = self.API
@@ -141,6 +143,9 @@ class estrategias ():
             #if entrar:
     
     def threadAbrePosicao(self, hora, minuto, par, tempo, operation):
+        if self.medias.analisadorTendenciaLista(par, tempo, operation) == False:
+            return
+
         tipoOperacao = self.verificaPayout(par, tempo)
         datahora = ":".join([str(hora), str(minuto)])
         if tipoOperacao != False:
@@ -179,12 +184,12 @@ class estrategias ():
                                         status, valor = self.API.check_win_digital_v2(id)
 
                                 if valor > 0:
-                                    salvaTransacaoTXT('WIN LISTA ==> ' + par + " || "+ tempo + 'm || ' + operation)  
+                                    salvaTransacaoTXT('WIN LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)  
                                     print('\nWIN LISTA ==> ', par, "||", tempo, 'm ||', operation, '\n')
                                     #ganhoTotal = ganhoTotal + valor
                                     break
                                 else:
-                                    salvaTransacaoTXT('LOSS LISTA ==> ' + par + " || "+ tempo + 'm || ' + operation)  
+                                    salvaTransacaoTXT('LOSS LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)  
                                     print('\nLOSS LISTA ==> ', par, "||", tempo, 'm ||', operation, '\n')
                                     #ganhoTotal = ganhoTotal + valor
                                     if self.config['Martingale'] > m:

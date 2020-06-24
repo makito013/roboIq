@@ -355,3 +355,6 @@
 23/06/2020, 00:45:00 - Indicador Minivela não permitiu operação
 23/06/2020, 00:45:01 - Indicador Minivela não permitiu operação
 23/06/2020, 00:56:00 - - Par USDJPY Não Disponível na opção digital
+23/06/2020, 23:14:04 - - Par EURJPY Não Disponível na opção digital
+23/06/2020, 23:15:00 - Indicador Minivela não permitiu operação
+23/06/2020, 23:15:01 - Indicador Minivela não permitiu operação

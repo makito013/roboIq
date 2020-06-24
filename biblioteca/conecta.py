@@ -64,6 +64,8 @@ def carregaConfig(API):
                     config['MartingaleMHI'] = int(linhaConfig[1])
                 elif linhaConfig[0] == 'MiniVela':
                     config['MiniVela'] = linhaConfig[1]
+                elif linhaConfig[0] == 'Tendencia':
+                    config['Tendencia'] = linhaConfig[1]
                 elif linhaConfig[0] == 'HumorTraders':
                     config['HumorTraders'] = linhaConfig[1]
                 elif linhaConfig[0] == 'PorcentagemHumor':
@@ -78,6 +80,9 @@ def carregaConfig(API):
                     config['Payout'] = float(linhaConfig[1].rstrip('%'))
                 elif linhaConfig[0] == 'PeriodoSMA':
                     config['PeriodoSMA'] = int(linhaConfig[1])
+                elif linhaConfig[0] == 'PeriodoEMA':
+                    config['PeriodoEMA'] = int(linhaConfig[1])
+
 
                 i = i + 1
                 #print('==========  (',i/total*100,'% ) ==========', end="\r")
@@ -104,6 +109,7 @@ def carregaConfig(API):
             print('Delay: ', config['Delay'])
             print('DelayMartingale: ', config['DelayMartingale'])
             print('Martingale: ', config['DelayMartingale'])
+            print('Analise de Tendencia: ', textTmp(config['Tendencia']))
         
         print('==========  CONFIGURAÇÃO CARREGADA COM SUCESSO ==========')
         print()

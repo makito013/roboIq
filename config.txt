@@ -35,7 +35,7 @@ StopLoss=40%
 Payout=50%
 
 #Estratégias
-MHI=S
+MHI=N
 Lista=S
 
 
@@ -52,4 +52,4 @@ PorcentagemHumor=70%
 SMA=S
 MMA=N
 PeriodoSMA=14
-PeriodoMMA=100 
+PeriodoEMA=100 
