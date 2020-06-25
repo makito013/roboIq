@@ -359,3 +359,9 @@
 23/06/2020, 23:15:00 - Indicador Minivela não permitiu operação
 23/06/2020, 23:15:01 - Indicador Minivela não permitiu operação
 24/06/2020, 13:19:00 - 13:19,CADJPY,5,CALL - Operação não realizada por estar contra a tendência
+24/06/2020, 13:54:00 - 13:54,EURCAD,5,PUT - Operação não realizada por estar contra a tendência
+24/06/2020, 14:04:00 - 13:4,EURUSD,5,CALL - Operação não realizada por estar contra a tendência
+24/06/2020, 14:19:00 - 13:19,CADJPY,5,CALL - Operação não realizada por estar contra a tendência
+24/06/2020, 14:34:00 - 14:34,USDCHF,5,PUT - Operação não realizada por estar contra a tendência
+24/06/2020, 16:34:00 - 16:34,GBPJPY,5,PUT - Operação não realizada por estar contra a tendência
+24/06/2020, 18:01:00 - 18:1,AUDUSD,1,PUT - Operação não realizada por estar contra a tendência

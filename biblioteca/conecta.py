@@ -2,18 +2,8 @@ from time import localtime, strftime
 from datetime import datetime, timedelta
 from biblioteca.diversos import criaTabela
 import sqlite3
+import getpass
 
-#Função de conexão
-def conecta(API):
-    try:
-        if rec < 5:
-            rec = rec + 1
-            print('Erro ao logar')
-            API.connect()
-        else:
-            print('Numero de tentativas excedido')
-    except:
-        print('Erro desconhecido')
 
 def textTmp(text):
     textoTemp = ''

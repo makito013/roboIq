@@ -1,16 +1,21 @@
 from iqoptionapi.stable_api import IQ_Option
 from time import localtime, strftime
-from biblioteca.conecta import conecta, carregaConfig, leituraLista
+from biblioteca.conecta import carregaConfig, leituraLista
 from biblioteca.estrategias import estrategias
 import sys
 import threading
 import time
+import getpass
 
 #Variaveis Globais
 ganhoTotal = 0
 
+#Pegar Login e senha
+login = input("Digite seu e-mail cadastrado na IqOption: ")
+senha = getpass.getpass("Digite sua senha (por segugurança ela ficar invisível): ")
+
 #Conexão API
-API = IQ_Option('bandradest@gmail.com', 'Bruno9107')
+API = IQ_Option(login, senha)
 API.connect()
 rec = 0
 
@@ -24,9 +29,24 @@ paresId = {}
 lista = {}
 t = {}
 e = {}
+rec = 0
 while True:
 	if API.check_connect() == False:
-		conecta(API)
+		try:
+			if rec < 5:
+				rec = rec + 1
+				print('Erro ao logar, tente novamente!')
+				#Pegar Login e senha
+				login = input("Digite seu e-mail cadastrado na IqOption: ")
+				senha = getpass.getpass("Digite sua senha (por segugurança ela ficar invisível): ")
+
+				#Conexão API
+				API = IQ_Option(login, senha)
+				API.connect()
+			else:
+				print('Numero de tentativas excedido')
+		except:
+			print('Erro desconhecido')
 	else:		
 		
 		if configurado == False:
