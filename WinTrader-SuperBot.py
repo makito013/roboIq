@@ -10,6 +10,14 @@ import getpass
 #Variaveis Globais
 ganhoTotal = 0
 
+#Texto de Inicialização
+print('\n\n\n\n#######################################################')
+print('#######------------------------------------------######')
+print('#######------------  WIN TRADER  ----------------######')
+print('#######---------------  BOT  --------------------######')
+print('#######------------------------------------------######')
+print('#######################################################\n\n\n\n\n')
+
 #Pegar Login e senha
 login = input("Digite seu e-mail cadastrado na IqOption: ")
 senha = getpass.getpass("Digite sua senha (por segugurança ela ficar invisível): ")
@@ -30,6 +38,7 @@ lista = {}
 t = {}
 e = {}
 rec = 0
+
 while True:
 	if API.check_connect() == False:
 		try:
@@ -38,7 +47,7 @@ while True:
 				print('Erro ao logar, tente novamente!')
 				#Pegar Login e senha
 				login = input("Digite seu e-mail cadastrado na IqOption: ")
-				senha = getpass.getpass("Digite sua senha (por segugurança ela ficar invisível): ")
+				senha = getpass.getpass("Digite sua senha (por segugurança ficará invisível): ")
 
 				#Conexão API
 				API = IQ_Option(login, senha)

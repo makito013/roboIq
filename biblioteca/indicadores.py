@@ -7,36 +7,37 @@ class indicadores ():
         self.API = API
         self.config = config
 
-    def verificaIndicadores(self, par, dir):
+    def verificaIndicadores(self, par, dir, tempo):
         if dir == False:
             return False
 
         retornoIndicador = True
 
-        if self.config['MiniVela'] == 'S' and retornoIndicador == True:
-            retornoIndicador = self.miniVelas(par,dir)
+        if self.config['OposicaoDeVela'] == 'S' and retornoIndicador == True:
+            retornoIndicador = self.OposicaoDeVela(par,dir, tempo)
 
-        if self.config['HumorTraders'] == 'S' and retornoIndicador == True:
-            retornoIndicador = self.humorTraders(par,dir)
+        # if self.config['HumorTraders'] == 'S' and retornoIndicador == True:
+        #     retornoIndicador = self.humorTraders(par,dir)
 
         return retornoIndicador
 
-    def miniVelas(self, par, dir):
+    def OposicaoDeVela(self, par, dir, tempo):
         ## FILTRO PARA MHI
         API = self.API
         
-        velaFiltro = API.get_candles(par, 15, 20, time.time())
+        velaFiltro = API.get_candles(par, 60 * tempo, 1, time.time())
+        velaAnterior = 'CALL' if velaFiltro[0]['open'] < velaFiltro[0]['close'] else 'PUT' if velaFiltro[0]['open'] > velaFiltro[0]['close'] else 'd'
         
-        i = 0
-        coresFiltro = ''
-        for x in velaFiltro:
-            coresFiltro += 'g' if x['open'] < x['close'] else 'r' if x['open'] > x['close'] else 'd'                 
-            i = i + 1
-
-        if coresFiltro.count('g') > coresFiltro.count('r') and dir == 'call' : return True
-        if coresFiltro.count('r') > coresFiltro.count('g') and dir == 'put' : return True
+        if velaAnterior == 'd':
+            salvaOperacaoNaoAbertaTXT('Indicador Oposição de Vela não permitiu operação - Vela Aterior é um Doji')
+            return False
+        elif velaAnterior != dir :
+            return True
+        else:
+            salvaOperacaoNaoAbertaTXT('Indicador Oposição de Vela não permitiu operação - Vela Aterior é igual a da ordem')
+            return False            
         
-        salvaOperacaoNaoAbertaTXT('Indicador Minivela não permitiu operação')
+        
         return False
         ## FIM FILTRO PARA MHI
 

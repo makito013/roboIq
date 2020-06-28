@@ -1,0 +1,7 @@
+#Configuracoes MHI
+MartingaleMHI=1
+DelayMHI=2
+TendenciaMHI=S
+
+#Estratégias
+Lista=S

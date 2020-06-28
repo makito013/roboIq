@@ -1,5 +1,5 @@
-#Tipo de conta PRACTICE ou REAL	
-Conta=PRACTICE
+#Tipo de conta DEMO ou REAL	
+Conta=DEMO
 
 #Valor das negociações utilizar % para porcentagem ou $ para valor fixo separado por . exemplo (10.1% ou 1200.8$)
 ValorNegociacao=10%
@@ -7,18 +7,11 @@ ValorNegociacao=10%
 #Delay
 #Valor de delay para abertura de negociação (Valor em segundos) - Este valor varia a depender da velocidade de sua internet
 #maximo = 15
-
-
-#Configuracoes da lista
-Martingale=1
-DelayMartingale=0
 Delay=2
-Tendencia=S
+DelayMartingale=1
 
-#Configuracoes MHI
-MartingaleMHI=1
-DelayMHI=2
-TendenciaMHI=S
+#Quantidade de martingales a ser usado (Use por sua conta e risco)
+Martingale=1
 
 #Executar operações em OTC?
 OTC=S
@@ -32,24 +25,15 @@ StopGain=50%
 StopLoss=40%
 
 #porcentagem minima de payout
-Payout=75%
-
-#Estratégias
-MHI=S
-Lista=S
-
+Payout=80%
 
 #Indicadores
-MiniVela=N
-HumorTraders=S
-
-#Configuração do Humor
-#Abrir posicao somente quando o humor do trader estiver x% ou mais a favor da operação
-PorcentagemHumor=70%
+Tendencia=S
+OposicaoDeVela=S
 
 #Analisador de tendencias
 #Configurações
 SMA=S
-MMA=N
-PeriodoSMA=14
-PeriodoMMA=100 
+EMA=N
+PeriodoSMA=100
+PeriodoEMA=100 

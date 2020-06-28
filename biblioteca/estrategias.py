@@ -48,12 +48,12 @@ class estrategias ():
                 if cores.count('g') > cores.count('r') and cores.count('d') == 0 : dir = 'PUT' 
                 if cores.count('r') > cores.count('g') and cores.count('d') == 0 : dir = 'CALL'
                 
-                if dir != False and filtroIndi.verificaIndicadores(par, dir) == False: 
+                if dir != False and filtroIndi.verificaIndicadores(par, dir, tempo) == False: 
                     dir = False
                     print('MHI Não aberto pelo filtro de indicadores')
                 
                 if dir : 
-                    status,id = API.buy_digital_spot(par, config['ValorNegociacao'], dir, 1)
+                    status,id = API.buy_digital_spot(par, config['ValorNegociacao'], dir.lower(), 1)
                     if status:
                         print('\nMHI => ABERTO UMA NEGOCIAÇÃO NO \nPAR:', par, '\nDIREÇÃO:',dir,'\nVALOR:', config['ValorNegociacao'], '\n')
                         m = 0
@@ -83,7 +83,7 @@ class estrategias ():
                                     print('\nLOSS MHI==> Posição: ', dir, "Velas: ", velasLog, '\n')
                                     #ganhoTotal = ganhoTotal + valor
                                     if config['MartingaleMHI'] > m:
-                                        status,id = API.buy_digital_spot(par, config['ValorNegociacao']*2, dir, 1)
+                                        status,id = API.buy_digital_spot(par, config['ValorNegociacao']*2, dir.lower(), 1)
                                         salvaTransacaoTXT('ABERTO MARTINGALE ' + str(m+1))    
                                         print('\nABERTO MARTINGALE = ', m+1 , '\n')
                                         m = m + 1
@@ -152,38 +152,46 @@ class estrategias ():
         datahora = ":".join([str(hora), str(minuto)])
         if tipoOperacao != False:
             _tabertura = datetime.strptime(datahora, '%H:%M')
-            _tabertura = _tabertura + timedelta(minutes=1)
+            _tabertura = _tabertura + timedelta(minutes=1) - timedelta(seconds=self.config['Delay'])
             _tabertura = float(_tabertura.strftime('%H%M.%S'))
             while True:
                 _tatual = float((datetime.now()).strftime('%H%M.%S'))      
                 # and _tatual <= _tabertura          
-                entrar = True if (_tatual >= (_tabertura - self.config['Delay'])) else False
+                entrar = True if (_tatual >= (_tabertura)) else False
 
                 if entrar == True:
+                    filtroIndi = self.indicadores
+                    if filtroIndi.verificaIndicadores(par, operation, tempo) == False: 
+                        print('Operação Não aberto pelo filtro de indicadores')
+                        break
+
                     status = False
                     id = 0
 
                     if tipoOperacao == 'digital':
-                        status,id = self.API.buy_digital_spot(par, self.config['ValorNegociacao'], operation, tempo)
+                        status,id = self.API.buy_digital_spot(par, self.config['ValorNegociacao'], operation.lower(), tempo)
                     elif tipoOperacao == 'binario':
-                        status,id = self.API.buy(self.config['ValorNegociacao'], par, operation, tempo)
+                        status,id = self.API.buy(self.config['ValorNegociacao'], par, operation.lower(), tempo)
                     else:
                         break
                     
                     if status == True:
                         print('Aberto negociação -> ', par, '-', tempo, '-', operation)
-                        _tfinal = float((datetime.now() + timedelta(minutes=tempo)).strftime('%H%M.%S'))
+                        _tfinal = float((datetime.now() + timedelta(minutes=tempo) - timedelta(seconds=self.config['DelayMartingale'])).strftime('%H%M.%S'))
                         m = 0
                         while True:
                             _tatual = float((datetime.now()).strftime('%H%M.%S'))
-                            if _tatual >= _tfinal - self.config['DelayMartingale']:
+                            if _tatual >= _tfinal:
                                 valor = 0
                                 velas = self.API.get_candles(par, 60 * tempo, 1, time.time())
                                 velas[0] = 'CALL' if velas[0]['open'] < velas[0]['close'] else 'PUT' if velas[0]['open'] > velas[0]['close'] else 'd'
                                 if velas[0] == operation:
-                                    status, valor = False, False
-                                    while not(status):
-                                        status, valor = self.API.check_win_digital_v2(id)
+                                    status = False
+                                    while valor == 0:
+                                        if tipoOperacao == 'digital':
+                                            status, valor = self.API.check_win_digital_v2(id)
+                                        elif tipoOperacao == 'binario':     
+                                            valor = self.API.check_win_v3(id)
 
                                 if valor > 0:
                                     salvaTransacaoTXT('WIN LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)  
@@ -196,11 +204,11 @@ class estrategias ():
                                     #ganhoTotal = ganhoTotal + valor
                                     if self.config['Martingale'] > m:
                                         if tipoOperacao == 'digital':
-                                            status,id = self.API.buy_digital_spot(par, self.config['ValorNegociacao']*2, operation, tempo)
+                                            status,id = self.API.buy_digital_spot(par, self.config['ValorNegociacao']*2, operation.lower(), tempo)
                                         elif tipoOperacao == 'binario':
-                                            status,id = self.API.buy(self.config['ValorNegociacao']*2, par, operation, tempo)
-
-                                        status,id = self.API.buy_digital_spot(par, self.config['ValorNegociacao']*2, dir, 1)
+                                            status,id = self.API.buy(self.config['ValorNegociacao']*2, par, operation.lower(), tempo)
+                                       
+                                        _tfinal = float((datetime.now() + timedelta(minutes=tempo)).strftime('%H%M.%S')) - self.config['DelayMartingale']
                                         salvaTransacaoTXT('ABERTO MARTINGALE ' + str(m+1))    
                                         print('\nABERTO MARTINGALE = ', m+1 , '\n')
                                         m = m + 1
@@ -222,7 +230,8 @@ class estrategias ():
             _vDigital = 0 
             parId = self.paresId[par]
             self.API.subscribe_strike_list(par, tempo)
-            digital = self.API.get_digital_current_profit(par, tempo) * 100
+            time.sleep(2)
+            digital = self.API.get_digital_current_profit(par, tempo)
             b = {}
 
             if tempo > 5:
@@ -243,6 +252,8 @@ class estrategias ():
                 _vBinario = 0
             else:
                 _vBinario = 100 - b[str(parId)]['option']['profit']['commission']
+
+            self.API.unsubscribe_strike_list(par, tempo)
 
             if digital == False and binario == False:
                 print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Posição não pode ser aberta pois par', par ,' não se encontra disponível')

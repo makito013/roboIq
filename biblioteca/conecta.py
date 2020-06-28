@@ -15,8 +15,8 @@ def textTmp(text):
 
 def carregaConfig(API):
     arquivo = open('./config.txt', 'r')
-    config = {'StopGain': '50%', 'StopLoss': '30%', 'MHI': 'S', 'Lista': 'S', 'TipoConta':''}
-    balance = API.get_balance()
+    config = {'StopGain': '50%', 'StopLoss': '30%', 'MHI': 'N', 'Lista': 'S', 'TipoConta':''}
+    balance = 0
     try:
         i = 0
         print()
@@ -27,8 +27,13 @@ def carregaConfig(API):
                 linhaConfig[1] = linhaConfig[1].rstrip('\n')
                 
                 if linhaConfig[0] == 'Conta':
+                    if linhaConfig[1] == 'DEMO':
+                        API.change_balance('PRACTICE')
+                    else:     
+                        API.change_balance(linhaConfig[1])
+
+                    balance = API.get_balance()
                     config['TipoConta'] = linhaConfig[1]
-                    API.change_balance(linhaConfig[1])
                 elif linhaConfig[0] == 'ValorNegociacao':
                     if '%' in linhaConfig[1]:
                         config['ValorNegociacao'] = balance * (int(linhaConfig[1].rstrip('%'))/100)
@@ -45,23 +50,23 @@ def carregaConfig(API):
                     elif '$' in linhaConfig[1]:
                         config['StopLoss'] = balance - int(linhaConfig[1].rstrip('$')) 
                 elif linhaConfig[0] == 'MHI':                    
-                    config['MHI'] = linhaConfig[1]
+                    config['MHI'] = linhaConfig[1].upper()
                 elif linhaConfig[0] == 'Lista':
-                    config['Lista'] = linhaConfig[1]
+                    config['Lista'] = linhaConfig[1].upper()
                 elif linhaConfig[0] == 'Martingale':
                     config['Martingale'] = int(linhaConfig[1])
                 elif linhaConfig[0] == 'MartingaleMHI':
                     config['MartingaleMHI'] = int(linhaConfig[1])
-                elif linhaConfig[0] == 'MiniVela':
-                    config['MiniVela'] = linhaConfig[1]
+                elif linhaConfig[0] == 'OposicaoDeVela':
+                    config['OposicaoDeVela'] = linhaConfig[1]
                 elif linhaConfig[0] == 'Tendencia':
-                    config['Tendencia'] = linhaConfig[1]
-                elif linhaConfig[0] == 'HumorTraders':
-                    config['HumorTraders'] = linhaConfig[1]
-                elif linhaConfig[0] == 'PorcentagemHumor':
-                    config['PorcentagemHumor'] = int(linhaConfig[1].rstrip('%'))
+                    config['Tendencia'] = linhaConfig[1].upper()
+                # elif linhaConfig[0] == 'HumorTraders':
+                #     config['HumorTraders'] = linhaConfig[1]
+                # elif linhaConfig[0] == 'PorcentagemHumor':
+                #     config['PorcentagemHumor'] = int(linhaConfig[1].rstrip('%'))
                 elif linhaConfig[0] == 'Delay':
-                    config['Delay'] = int(linhaConfig[1]) / 100
+                    config['Delay'] = int(linhaConfig[1])
                 elif linhaConfig[0] == 'DelayMHI':
                     config['DelayMHI'] = int(linhaConfig[1]) / 100
                 elif linhaConfig[0] == 'DelayMartingale':
@@ -73,9 +78,9 @@ def carregaConfig(API):
                 elif linhaConfig[0] == 'PeriodoEMA':
                     config['PeriodoEMA'] = int(linhaConfig[1])
                 elif linhaConfig[0] == 'EMA':
-                    config['EMA'] = linhaConfig[1]
+                    config['EMA'] = linhaConfig[1].upper()
                 elif linhaConfig[0] == 'SMA':
-                    config['SMA'] = linhaConfig[1]
+                    config['SMA'] = linhaConfig[1].upper()
 
                 i = i + 1
                 #print('==========  (',i/total*100,'% ) ==========', end="\r")
@@ -85,14 +90,11 @@ def carregaConfig(API):
         print('StopGain: ', config['StopGain'])
         print('StopLoss: ', config['StopLoss'])
         print('ValorNegociação: ', config['ValorNegociacao'])
-        print('MiniVela: ', textTmp(config['MiniVela']))
-        print('HumorTraders: ', textTmp(config['HumorTraders']))
-        print('Porcentagem Humor: ', config['PorcentagemHumor'])
         print('Payout Minimo: ', config['Payout'])
-
-        print('==========  CONFIGURAÇÃO MHI ')
-        print('MHI: ', textTmp(config['MHI']))
+        
         if config['MHI'] == 'S':
+            print('==========  CONFIGURAÇÃO MHI ')
+            print('MHI: ', textTmp(config['MHI']))
             print('Delay: ', config['DelayMHI'])
             print('DelayMartingale: ', config['DelayMartingale'])
 
