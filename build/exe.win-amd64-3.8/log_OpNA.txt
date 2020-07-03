@@ -1,2 +1,12 @@
 
 23/06/2020, 14:35:00 - Indicador Minivela não permitiu operação
+28/06/2020, 03:04:02 - Tendência de Alta
+28/06/2020, 03:04:02 - Tendência de Alta
+28/06/2020, 03:04:02 - Tendência de Alta
+28/06/2020, 03:04:03 - 2:4,EURUSD-OTC,5,PUT - Operação não realizada por estar contra a tendência
+28/06/2020, 03:19:00 - Tendência de Alta
+28/06/2020, 04:14:00 - Tendência de Alta
+28/06/2020, 05:39:00 - Tendência de Alta
+28/06/2020, 05:39:00 - 5:39,USDCHF-OTC,5,PUT - Operação não realizada por estar contra a tendência
+28/06/2020, 06:34:00 - Tendência de Alta
+28/06/2020, 06:34:58 - Indicador Oposição de Vela não permitiu operação - Vela Aterior é igual a da ordem

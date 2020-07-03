@@ -6,3 +6,5 @@
 27/06/2020, 02:26:09 - - Par USDCHF-OTC Não Disponível na opção digital
 27/06/2020, 02:55:23 - 2:55,GBPUSD-OTC,1,PUT - Operação não realizada por estar contra a tendência
 28/06/2020, 01:34:22 - Tendência de Baixa
+28/06/2020, 02:04:01 - Tendência de Alta
+28/06/2020, 02:04:01 - 2:4,EURUSD-OTC,5,PUT - Operação não realizada por estar contra a tendência
