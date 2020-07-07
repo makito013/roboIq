@@ -70,7 +70,7 @@ def carregaConfig(API):
                 elif linhaConfig[0] == 'DelayMHI':
                     config['DelayMHI'] = int(linhaConfig[1]) / 100
                 elif linhaConfig[0] == 'DelayMartingale':
-                    config['DelayMartingale'] = int(linhaConfig[1]) / 100
+                    config['DelayMartingale'] = int(linhaConfig[1])
                 elif linhaConfig[0] == 'Payout':
                     config['Payout'] = float(linhaConfig[1].rstrip('%'))
                 elif linhaConfig[0] == 'PeriodoSMA':

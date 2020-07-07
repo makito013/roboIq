@@ -8,3 +8,34 @@
 28/06/2020, 01:34:22 - Tendência de Baixa
 28/06/2020, 02:04:01 - Tendência de Alta
 28/06/2020, 02:04:01 - 2:4,EURUSD-OTC,5,PUT - Operação não realizada por estar contra a tendência
+06/07/2020, 23:52:01 - Tendência de Baixa
+06/07/2020, 23:52:01 - Tendência de Baixa
+06/07/2020, 23:52:02 - Tendência de Alta
+06/07/2020, 23:52:02 - Tendência de Baixa
+06/07/2020, 23:52:02 - Tendência de Alta
+06/07/2020, 23:52:02 - Tendência de Baixa
+06/07/2020, 23:52:02 - 23:52,GBPUSD-OTC,1,CALL - Operação não realizada por estar contra a tendência
+06/07/2020, 23:52:02 - Tendência de Alta
+06/07/2020, 23:52:02 - Tendência de Baixa
+06/07/2020, 23:52:02 - Tendência de Alta
+06/07/2020, 23:52:02 - Tendência de Baixa
+06/07/2020, 23:52:02 - 23:52,GBPUSD-OTC,1,CALL - Operação não realizada por estar contra a tendência
+06/07/2020, 23:52:02 - Tendência de Baixa
+06/07/2020, 23:52:02 - 23:52,EURUSD-OTC,5,CALL - Operação não realizada por estar contra a tendência
+06/07/2020, 23:52:07 - - Par EURUSD-OTC Não Disponível na opção binario
+06/07/2020, 23:52:07 - - Par GBPUSD-OTC Não Disponível na opção binario
+06/07/2020, 23:52:08 - - Par EURGBP-OTC Não Disponível na opção binario
+06/07/2020, 23:53:09 - Indicador Oposição de Vela não permitiu operação - Vela Aterior é igual a da ordem
+06/07/2020, 23:53:09 - Indicador Oposição de Vela não permitiu operação - Vela Aterior é igual a da ordem
+06/07/2020, 23:54:03 - - Par USDJPY Não Disponível na opção binario
+06/07/2020, 23:54:04 - - Par USDJPY Não Disponível na opção binario
+06/07/2020, 23:57:05 - - Par USDJPY Não Disponível na opção binario
+06/07/2020, 23:57:09 - - Par USDJPY Não Disponível na opção binario
+07/07/2020, 00:01:30 - - Par USDJPY Não Disponível na opção binario
+07/07/2020, 00:01:31 - - Par USDJPY Não Disponível na opção binario
+07/07/2020, 00:18:02 - - Par USDJPY Não Disponível na opção binario
+07/07/2020, 00:18:03 - - Par USDJPY Não Disponível na opção binario
+07/07/2020, 00:22:02 - - Par USDJPY Não Disponível na opção binario
+07/07/2020, 00:22:02 - - Par USDJPY Não Disponível na opção binario
+07/07/2020, 00:28:02 - - Par USDJPY Não Disponível na opção binario
+07/07/2020, 00:28:02 - - Par USDJPY Não Disponível na opção binario

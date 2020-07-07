@@ -176,7 +176,7 @@ class estrategias ():
                         break
                     
                     if status == True:
-                        print('Aberto negociação -> ', par, '-', tempo, '-', operation)
+                        print('Aberto negociação -> ', par, '-', tempo, '-', operation)                       
                         _tfinal = float((datetime.now() + timedelta(minutes=tempo) - timedelta(seconds=self.config['DelayMartingale'])).strftime('%H%M.%S'))
                         m = 0
                         while True:
@@ -253,7 +253,7 @@ class estrategias ():
             else:
                 _vBinario = 100 - b[str(parId)]['option']['profit']['commission']
 
-            self.API.unsubscribe_strike_list(par, tempo)
+            #self.API.unsubscribe_strike_list(par, tempo)
 
             if digital == False and binario == False:
                 print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Posição não pode ser aberta pois par', par ,' não se encontra disponível')

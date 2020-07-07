@@ -19,8 +19,10 @@ print('#######------------------------------------------######')
 print('#######################################################\n\n\n\n\n')
 
 #Pegar Login e senha
-login = input("Digite seu e-mail cadastrado na IqOption: ")
-senha = getpass.getpass("Digite sua senha (por segugurança ela ficar invisível): ")
+#login = input("Digite seu e-mail cadastrado na IqOption: ")
+#senha = getpass.getpass("Digite sua senha (por segugurança ela ficar invisível): ")
+login = 'bandradest@gmail.com'
+senha = 'Bruno9107'
 
 #Conexão API
 API = IQ_Option(login, senha)
@@ -57,7 +59,6 @@ while True:
 		except:
 			print('Erro desconhecido')
 	else:		
-		
 		if configurado == False:
 			print('####  Conectado com sucesso  ########')
 			print('####  Carregando Configuracao  ########')

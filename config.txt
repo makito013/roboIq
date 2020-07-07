@@ -28,8 +28,8 @@ StopLoss=15%
 Payout=80%
 
 #Indicadores
-Tendencia=S
-OposicaoDeVela=S
+Tendencia=N
+OposicaoDeVela=N
 
 #Analisador de tendencias
 #Configurações
