@@ -10,13 +10,14 @@ import sqlite3
 import threading
 
 class estrategias ():
-    def __init__(self, API, config, paresId):
+    def __init__(self, API, config, paresId, texto):
         ''' Construtor '''
         self.API = API
         self.config = config
         self.paresId = paresId
         self.indicadores = indicadores(API, config)
         self.medias = medias(API, config)
+        self.texto = texto
 
     def MHI(self):
         API = self.API
@@ -96,8 +97,8 @@ class estrategias ():
 
     def lista(self):
         listaAguardando = []
-        
 
+        x = 1
         _han = int((datetime.now()).strftime('%H')) - 1
         _man = int((datetime.now()).strftime('%M')) - 1
         while True:
@@ -145,6 +146,7 @@ class estrategias ():
     def threadAbrePosicao(self, hora, minuto, par, tempo, operation):
         if self.medias.analisadorTendenciaLista(par, tempo, operation) == False:
             linha = str(hora) + ':' + str(minuto) + ',' + par + ',' + str(tempo) + ',' + operation
+            self.texto.append(linha + ' - Operação não realizada por estar contra a tendência')
             salvaOperacaoNaoAbertaTXT(linha + ' - Operação não realizada por estar contra a tendência')  
             return
 
@@ -162,7 +164,8 @@ class estrategias ():
                 if entrar == True:
                     filtroIndi = self.indicadores
                     if filtroIndi.verificaIndicadores(par, operation, tempo) == False: 
-                        print('Operação Não aberto pelo filtro de indicadores')
+                        self.texto.append('Operação Não aberto pelo filtro de indicadores')
+                        #print('Operação Não aberto pelo filtro de indicadores')
                         break
 
                     status = False
@@ -176,7 +179,8 @@ class estrategias ():
                         break
                     
                     if status == True:
-                        print('Aberto negociação -> ', par, '-', tempo, '-', operation)                       
+                        self.texto.append('Aberto negociação -> ' + par + ' - ' + str(tempo) + ' - ' + operation)
+                        #print('Aberto negociação -> ', par, '-', tempo, '-', operation)                       
                         _tfinal = float((datetime.now() + timedelta(minutes=tempo) - timedelta(seconds=self.config['DelayMartingale'])).strftime('%H%M.%S'))
                         m = 0
                         while True:
@@ -184,23 +188,27 @@ class estrategias ():
                             if _tatual >= _tfinal:
                                 valor = 0
                                 velas = self.API.get_candles(par, 60 * tempo, 1, time.time())
-                                velas[0] = 'CALL' if velas[0]['open'] < velas[0]['close'] else 'PUT' if velas[0]['open'] > velas[0]['close'] else 'd'
-                                if velas[0] == operation:
+                                resultado = 'CALL' if velas[0]['open'] < velas[0]['close'] else 'PUT' if velas[0]['open'] > velas[0]['close'] else 'd'
+                                if resultado == operation:
                                     status = False
                                     while valor == 0:
                                         if tipoOperacao == 'digital':
                                             status, valor = self.API.check_win_digital_v2(id)
                                         elif tipoOperacao == 'binario':     
                                             valor = self.API.check_win_v3(id)
+                                if valor == None: #Em caso de dodge
+                                    valor = 0
 
                                 if valor > 0:
                                     salvaTransacaoTXT('WIN LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)  
-                                    print('\nWIN LISTA ==> ', par, "||", tempo, 'm ||', operation, '\n')
+                                    self.texto.append('WIN LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)
+                                    # print('\nWIN LISTA ==> ', par, "||", tempo, 'm ||', operation, '\n')
                                     #ganhoTotal = ganhoTotal + valor
                                     break
                                 else:
-                                    salvaTransacaoTXT('LOSS LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)  
-                                    print('\nLOSS LISTA ==> ', par, "||", tempo, 'm ||', operation, '\n')
+                                    salvaTransacaoTXT('LOSS LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)
+                                    self.texto.append('LOSS LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)  
+                                    #print('\nLOSS LISTA ==> ', par, "||", tempo, 'm ||', operation, '\n')
                                     #ganhoTotal = ganhoTotal + valor
                                     if self.config['Martingale'] > m:
                                         if tipoOperacao == 'digital':
@@ -209,12 +217,14 @@ class estrategias ():
                                             status,id = self.API.buy(self.config['ValorNegociacao']*2, par, operation.lower(), tempo)
                                        
                                         _tfinal = float((datetime.now() + timedelta(minutes=tempo)).strftime('%H%M.%S')) - self.config['DelayMartingale']
-                                        salvaTransacaoTXT('ABERTO MARTINGALE ' + str(m+1))    
-                                        print('\nABERTO MARTINGALE = ', m+1 , '\n')
+                                        salvaTransacaoTXT('ABERTO MARTINGALE ' + str(m+1))  
+                                        self.texto.append('ABERTO MARTINGALE ' + str(m+1))  
+                                        #print('\nABERTO MARTINGALE = ', m+1 , '\n')
                                         m = m + 1
                                     else:
                                         break
                     else:    
+                        self.texto.append('Não foi possível abrir a negociação -> ' + par + ' - ' + str(tempo) + ' - ', operation)
                         print('Não foi possível abrir a negociação -> ', par, '-', tempo, '-', operation)
 
                     break
@@ -242,12 +252,14 @@ class estrategias ():
                 binario = b[str(parId)]['enabled']
 
             if digital == 0:
-                print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção digital')
+                self.texto.append('Par '+par+' Não Disponível na opção digital')
+                #print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção digital')
                 salvaOperacaoNaoAbertaTXT('- Par '+par+' Não Disponível na opção digital')
                 _vDigital = 0
             
             if binario == False:
-                print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção binario')
+                self.texto.append('Par '+par+' Não Disponível na opção binario')
+                #print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção binario')
                 salvaOperacaoNaoAbertaTXT('- Par '+par+' Não Disponível na opção binario')
                 _vBinario = 0
             else:
@@ -256,7 +268,8 @@ class estrategias ():
             #self.API.unsubscribe_strike_list(par, tempo)
 
             if digital == False and binario == False:
-                print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Posição não pode ser aberta pois par', par ,' não se encontra disponível')
+                self.texto.append('Posição não pode ser aberta pois '+par+' não se encontra disponível')
+                #print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Posição não pode ser aberta pois par', par ,' não se encontra disponível')
                 salvaOperacaoNaoAbertaTXT('- Posição não pode ser aberta pois '+par+' não se encontra disponível')
                 return False
             else:
@@ -264,7 +277,8 @@ class estrategias ():
                     if digital >= self.config['Payout']:
                         return 'digital'
                     else:
-                        print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Negociação não foi aberta: Par', par ,'fora do payout')
+                        self.texto.append('Negociação não foi aberta: Par '+ par +' fora do payout')
+                        #print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Negociação não foi aberta: Par', par ,'fora do payout')
                         salvaOperacaoNaoAbertaTXT('Negociação não foi aberta: Par '+ par +' fora do payout')
                         return False
                 else:
@@ -272,11 +286,14 @@ class estrategias ():
                         #print('Dentro do payout')
                         return 'binario'
                     else:
-                        print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Negociação não foi aberta: Par', par ,'fora do payout')
+                        self.texto.append('Negociação não foi aberta: Par '+ par +' fora do payout')
+                        #print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Negociação não foi aberta: Par', par ,'fora do payout')
                         salvaOperacaoNaoAbertaTXT('Negociação não foi aberta: Par '+ par +' fora do payout')
                         return False
         except:
-            print('Ops, aconteceu algum erro ao abrir a negociação')
-            print('Par:',par, 'Tempo', tempo)
+            self.texto.append('Ops, aconteceu algum erro ao abrir a negociação')
+            self.texto.append('Par: ' + par, ' - Tempo: ', str(tempo))
+            #print('Ops, aconteceu algum erro ao abrir a negociação')
+            #print('Par:',par, 'Tempo', tempo)
             # print(minuto, par, tempo, operation)
 
