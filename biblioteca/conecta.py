@@ -36,7 +36,7 @@ def carregaConfig(API):
                     config['TipoConta'] = linhaConfig[1]
                 elif linhaConfig[0] == 'ValorNegociacao':
                     if '%' in linhaConfig[1]:
-                        config['ValorNegociacao'] = balance * (int(linhaConfig[1].rstrip('%'))/100)
+                        config['ValorNegociacao'] = round(balance * (int(linhaConfig[1].rstrip('%'))/100),2)
                     elif '$' in linhaConfig[1]:
                         config['ValorNegociacao'] = int(linhaConfig[1].rstrip('$'))
                 elif linhaConfig[0] == 'StopGain':

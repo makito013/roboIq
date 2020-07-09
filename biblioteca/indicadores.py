@@ -1,11 +1,13 @@
 import time
-from biblioteca.diversos import salvaOperacaoNaoAbertaTXT
+#from biblioteca.diversos import salvaOperacaoNaoAbertaTXT
 
 class indicadores ():
-    def __init__(self, API, config):
+    def __init__(self, API, config, logTransacao, logNaoAberto):
         ''' Construtor '''
         self.API = API
         self.config = config
+        self.logTransacao = logTransacao
+        self.logNaoAberto = logNaoAberto
 
     def verificaIndicadores(self, par, dir, tempo):
         if dir == False:
@@ -29,12 +31,12 @@ class indicadores ():
         velaAnterior = 'CALL' if velaFiltro[0]['open'] < velaFiltro[0]['close'] else 'PUT' if velaFiltro[0]['open'] > velaFiltro[0]['close'] else 'd'
         
         if velaAnterior == 'd':
-            salvaOperacaoNaoAbertaTXT('Indicador Oposição de Vela não permitiu operação - Vela Aterior é um Doji')
+            self.logNaoAberto.append('Indicador Oposição de Vela não permitiu operação - Vela Aterior é um Doji')
             return False
         elif velaAnterior != dir :
             return True
         else:
-            salvaOperacaoNaoAbertaTXT('Indicador Oposição de Vela não permitiu operação - Vela Aterior é igual a da ordem')
+            self.logNaoAberto.append('Indicador Oposição de Vela não permitiu operação - Vela Aterior é igual a da ordem')
             return False            
         
         
@@ -53,5 +55,5 @@ class indicadores ():
         elif dir == 'putt' and porPut >= self.config['porcetagemHumor']:
             return True
         else:
-            salvaOperacaoNaoAbertaTXT('Humor dos traders abaixo do programado')
+            self.logNaoAberto.append('Humor dos traders abaixo do programado')
             return False

@@ -1,14 +1,16 @@
 import logging, json, sys, time
 import time
 import numpy as np
-from biblioteca.diversos import salvaTransacaoTXT, salvaOperacaoNaoAbertaTXT
+#from biblioteca.diversos import salvaTransacaoTXT, salvaOperacaoNaoAbertaTXT
 from talib import abstract
 
 class medias ():
-    def __init__(self, API, config):
+    def __init__(self, API, config, logTransacao, logNaoAberto):
         ''' Construtor '''
         self.API = API
         self.config = config
+        self.logTransacao = logTransacao
+        self.logNaoAberto = logNaoAberto
 
     def analisadorTendenciaLista(self, par, tempo, operation):
         if self.config['Tendencia'] == 'S':
@@ -71,19 +73,19 @@ class medias ():
 
         if ultimoCandle == 'CALL' and valores['close'][len(valores)-1] > calculo_ema[ultimo-1] and valores['open'][len(valores)-1] < calculo_ema[ultimo-1]:
             #print('To no meio')
-            salvaOperacaoNaoAbertaTXT('Vela Sobre a linha de Tendência')
+            self.logNaoAberto.append('Vela Sobre a linha de Tendência')
             return 'NEUTRO'
         elif ultimoCandle == 'PUT' and valores['close'][len(valores)-1] < calculo_ema[ultimo-1] and valores['open'][len(valores)-1] > calculo_ema[ultimo-1]:
             #print('To no meio')
-            salvaOperacaoNaoAbertaTXT('Vela Sobre a linha de Tendência')
+            self.logNaoAberto.append('Vela Sobre a linha de Tendência')
             return 'NEUTRO'
         elif calculo_ema[ultimo-1] > valores['close'][len(valores)-1]:
             #print('tendencia de queda')
-            salvaOperacaoNaoAbertaTXT('Tendência de Baixa')
+            self.logNaoAberto.append('Tendência de Baixa')
             return 'PUT'
         elif calculo_ema[ultimo-1] < valores['close'][len(valores)-1]:
             #print('tendencia de alta')
-            salvaOperacaoNaoAbertaTXT('Tendência de Alta')
+            self.logNaoAberto.append('Tendência de Alta')
             return 'CALL'
 
         print(calculo_ema)

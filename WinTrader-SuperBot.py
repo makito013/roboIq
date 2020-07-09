@@ -1,6 +1,7 @@
 from iqoptionapi.stable_api import IQ_Option
 from time import localtime, strftime
 from biblioteca.conecta import carregaConfig, leituraLista
+from biblioteca.diversos import printLog
 from biblioteca.estrategias import estrategias
 import sys
 import threading
@@ -30,10 +31,12 @@ API.connect()
 rec = 0
 texto = []
 #While
-load = '|'
+
 configurado = False
 tempAnterior = strftime("%S", localtime())
 tempMinAnterior = strftime("%M", localtime())
+logNaoAberto = []
+logTransacao = []
 config = {}
 paresId = {}
 lista = {}
@@ -66,7 +69,7 @@ while True:
 			if config == False:
 				break
 			configurado = True			
-			e = estrategias(API, config, paresId, texto)
+			e = estrategias(API, config, paresId, texto, logTransacao, logNaoAberto)
 			if config['MHI'] == 'S':
 				t['MHI'] = threading.Thread(target=e.MHI, args=())
 				t['MHI'].start()
@@ -74,42 +77,24 @@ while True:
 				lista = leituraLista()
 				t['Lista'] = threading.Thread(target=e.lista, args=())
 				t['Lista'].start()
+			#Carrega LOG
 			print('####  BUSCANDO OPORTUNIDADES  ########')
+			t['Lista'] = threading.Thread(target=printLog, args=(texto, logTransacao, logNaoAberto))
+			t['Lista'].start()	
 		else:
-			segundoAtual = strftime("%S", localtime())		
-			if len(texto) > 0:
-					print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '-', texto.pop())
-			else:		
-				if tempAnterior != segundoAtual:
-					tempAnterior = segundoAtual
-					MinutoAtual = strftime("%M", localtime())
-					horaAtual = strftime("%H", localtime())
-					
-					if load == '|':
-						load = '/'
-					elif load == '/':
-						load = '-'
-					elif load == '-':
-						load = '\\'
-					else:
-						load = '|'
-						
-					print(load, ' - ', horaAtual,':', MinutoAtual, ':', segundoAtual, end="\r")
-						
-					#MHITemp = '- MHI Esta procurando oportunidade' if config['MHI'] == 'S' else ''
-					#print(load, ' - ', horaAtual,':', MinutoAtual, ':', segundoAtual, MHITemp, end="\r")
-
-					if tempMinAnterior != MinutoAtual:
-						tempMinAnterior = MinutoAtual
-						montanteAtual = API.get_balance()
-						if config['StopGain'] <= montanteAtual:
-							print()
-							print('###### PARABENS STOP GAIN ########## \n TOTAL GANHO:',montanteAtual)
-							#input('\n Aperte qualquer tecla para finalizar')
-							break
-							#sys.exit()
-						elif config['StopLoss'] >= montanteAtual + config['ValorNegociacao']:
-							print()
-							print('###### OPS STOP TENTE OUTRO DIA ########## \n TOTAL DA BANCA:',montanteAtual)
-							#input('\n Aperte qualquer tecla para finalizar')
-							break
+			MinutoAtual = int(strftime("%M", localtime()))
+			
+			if tempMinAnterior != MinutoAtual:
+				tempMinAnterior = MinutoAtual
+				montanteAtual = API.get_balance()
+				if config['StopGain'] <= montanteAtual:
+					print()
+					print('###### PARABENS STOP GAIN ########## \n TOTAL GANHO:',montanteAtual)
+					#input('\n Aperte qualquer tecla para finalizar')
+					break
+					#sys.exit()
+				elif config['StopLoss'] >= montanteAtual + config['ValorNegociacao']:
+					print()
+					print('###### OPS STOP TENTE OUTRO DIA ########## \n TOTAL DA BANCA:',montanteAtual)
+					#input('\n Aperte qualquer tecla para finalizar')
+					break
