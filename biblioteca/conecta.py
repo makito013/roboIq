@@ -14,77 +14,91 @@ def textTmp(text):
     return textoTemp
 
 def carregaConfig(API):
-    arquivo = open('./config.txt', 'r')
+    # arquivo = open('./config.txt', 'r')
     config = {'StopGain': '50%', 'StopLoss': '30%', 'MHI': 'N', 'Lista': 'S', 'TipoConta':''}
     balance = 0
     try:
         i = 0
         print()
         print('==========  CARREGANDO CONFIGURAÇÕES, AGUARDE ==========')
-        for linha in arquivo:
-            if '#' not in linha and '=' in linha:                
-                linhaConfig = linha.split('=')
-                linhaConfig[1] = linhaConfig[1].rstrip('\n')
-                
-                if linhaConfig[0] == 'Conta':
-                    if linhaConfig[1] == 'DEMO':
-                        API.change_balance('PRACTICE')
-                    else:     
-                        API.change_balance(linhaConfig[1])
+        conn = sqlite3.connect('cn_et')
+        cursor = conn.cursor()
+        cursor.execute("SELECT CAMPO, VALOR FROM CONFIGS ") 
+        for linhaConfig in cursor.fetchall():
+            #if '#' not in linha and '=' in linha:                
+            #linhaConfig = linha.split('=')
+            #linhaConfig[1] = linhaConfig[1].rstrip('\n')
+            
+            if linhaConfig[0] == 'tipoConta':
+                if linhaConfig[1] == 'Demo':
+                    API.change_balance('PRACTICE')
+                else:     
+                    API.change_balance(linhaConfig[1])
 
-                    balance = API.get_balance()
-                    config['TipoConta'] = linhaConfig[1]
-                elif linhaConfig[0] == 'ValorNegociacao':
-                    if '%' in linhaConfig[1]:
-                        config['ValorNegociacao'] = round(balance * (int(linhaConfig[1].rstrip('%'))/100),2)
-                    elif '$' in linhaConfig[1]:
-                        config['ValorNegociacao'] = int(linhaConfig[1].rstrip('$'))
-                elif linhaConfig[0] == 'StopGain':
-                    if '%' in linhaConfig[1]:
-                        config['StopGain'] = (balance * (int(linhaConfig[1].rstrip('%'))/100)) + balance
-                    elif '$' in linhaConfig[1]:
-                        config['StopGain'] = int(linhaConfig[1].rstrip('$')) + balance
-                elif linhaConfig[0] == 'StopLoss':
-                    if '%' in linhaConfig[1]:
-                        config['StopLoss'] = balance - (balance * (int(linhaConfig[1].rstrip('%'))/100))
-                    elif '$' in linhaConfig[1]:
-                        config['StopLoss'] = balance - int(linhaConfig[1].rstrip('$')) 
-                elif linhaConfig[0] == 'MHI':                    
-                    config['MHI'] = linhaConfig[1].upper()
-                elif linhaConfig[0] == 'Lista':
-                    config['Lista'] = linhaConfig[1].upper()
-                elif linhaConfig[0] == 'Martingale':
-                    config['Martingale'] = int(linhaConfig[1])
-                elif linhaConfig[0] == 'MartingaleMHI':
-                    config['MartingaleMHI'] = int(linhaConfig[1])
-                elif linhaConfig[0] == 'OposicaoDeVela':
-                    config['OposicaoDeVela'] = linhaConfig[1]
-                elif linhaConfig[0] == 'Tendencia':
-                    config['Tendencia'] = linhaConfig[1].upper()
-                # elif linhaConfig[0] == 'HumorTraders':
-                #     config['HumorTraders'] = linhaConfig[1]
-                # elif linhaConfig[0] == 'PorcentagemHumor':
-                #     config['PorcentagemHumor'] = int(linhaConfig[1].rstrip('%'))
-                elif linhaConfig[0] == 'Delay':
-                    config['Delay'] = int(linhaConfig[1])
-                elif linhaConfig[0] == 'DelayMHI':
-                    config['DelayMHI'] = int(linhaConfig[1]) / 100
-                elif linhaConfig[0] == 'DelayMartingale':
-                    config['DelayMartingale'] = int(linhaConfig[1])
-                elif linhaConfig[0] == 'Payout':
-                    config['Payout'] = float(linhaConfig[1].rstrip('%'))
-                elif linhaConfig[0] == 'PeriodoSMA':
-                    config['PeriodoSMA'] = int(linhaConfig[1])
-                elif linhaConfig[0] == 'PeriodoEMA':
-                    config['PeriodoEMA'] = int(linhaConfig[1])
-                elif linhaConfig[0] == 'EMA':
-                    config['EMA'] = linhaConfig[1].upper()
-                elif linhaConfig[0] == 'SMA':
-                    config['SMA'] = linhaConfig[1].upper()
+                balance = API.get_balance()
+                config['TipoConta'] = linhaConfig[1]
+            elif linhaConfig[0] == 'negociacao':
+                config['ValorNegociacao'] = int(linhaConfig[1])
+            elif linhaConfig[0] == 'tipoValor':
+                if '%' in linhaConfig[1]:
+                    config['ValorNegociacao'] = round(balance * (config['ValorNegociacao']/100),2)
+            elif linhaConfig[0] == 'qtdMartingale':
+                config['Martingale'] = int(linhaConfig[1])
+            elif linhaConfig[0] == 'delay':
+                config['Delay'] = int(linhaConfig[1])
+            elif linhaConfig[0] == 'delayMartingale':
+                config['DelayMartingale'] = int(linhaConfig[1])
+            elif linhaConfig[0] == 'stopGain':
+                config['StopGain'] = int(linhaConfig[1])
+            elif linhaConfig[0] == 'tipoStopGain':
+                if '%' in linhaConfig[1]:
+                    config['StopGain'] = (balance * (config['StopGain']/100)) + balance
+                elif '$' in linhaConfig[1]:
+                    config['StopGain'] = config['StopGain'] + balance
+            elif linhaConfig[0] == 'stopLoss':
+                config['StopLoss'] = int(linhaConfig[1])
+            elif linhaConfig[0] == 'tipoStopLoss':
+                if '%' in linhaConfig[1]:
+                    config['StopLoss'] = balance - (balance * (config['StopLoss']/100))
+                elif '$' in linhaConfig[1]:
+                    config['StopLoss'] = balance - config['StopLoss']
+            elif linhaConfig[0] == 'minimoPayout':
+                config['Payout'] = float(linhaConfig[1])
+            elif linhaConfig[0] == 'SMA':
+                config['SMA'] = 'S' if linhaConfig[1] == '1' else 'N'
+            elif linhaConfig[0] == 'EMA':
+                config['EMA'] = 'S' if linhaConfig[1] == '1' else 'N'
+            elif linhaConfig[0] == 'periodoEMA':
+                config['PeriodoEMA'] = int(linhaConfig[1])
+            elif linhaConfig[0] == 'periodoSMA':
+                config['PeriodoSMA'] = int(linhaConfig[1])
+            elif linhaConfig[0] == 'lista':
+                config['Lista'] = 'S' if linhaConfig[1] == '1' else 'N'
+            elif linhaConfig[0] == 'MHI':                    
+                config['MHI'] = 'S' if linhaConfig[1] == '1' else 'N'
+            elif linhaConfig[0] == 'oposicaoDeVela':
+                config['OposicaoDeVela'] = 'S' if linhaConfig[1] == '1' else 'N'
+            elif linhaConfig[0] == 'tendencia':
+                config['Tendencia'] = 'S' if linhaConfig[1] == '1' else 'N'
 
-                i = i + 1
-                #print('==========  (',i/total*100,'% ) ==========', end="\r")
-                
+            elif linhaConfig[0] == 'MartingaleMHI':
+                config['MartingaleMHI'] = int(linhaConfig[1])
+            
+            # elif linhaConfig[0] == 'HumorTraders':
+            #     config['HumorTraders'] = linhaConfig[1]
+            # elif linhaConfig[0] == 'PorcentagemHumor':
+            #     config['PorcentagemHumor'] = int(linhaConfig[1])
+            
+            elif linhaConfig[0] == 'DelayMHI':
+                config['DelayMHI'] = int(linhaConfig[1]) / 100
+            
+            
+            
+            
+
+            i = i + 1
+            #print('==========  (',i/total*100,'% ) ==========', end="\r")      
+                        
         print('==========  CONFIGURAÇÃO Geral ')
         print('Tipo de Conta: ', config['TipoConta'])
         print('StopGain: ', config['StopGain'])
@@ -122,7 +136,6 @@ def carregaConfig(API):
         print()
         print('Carteira: R$', balance)
         print()
-        arquivo.close()
 
         paresId = API.get_all_ACTIVES_OPCODE()
 

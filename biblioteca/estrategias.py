@@ -112,9 +112,10 @@ class estrategias ():
                 conn = sqlite3.connect('robot')
                 cursor = conn.cursor()
                 cursor.execute("SELECT hora, minuto, par, tempo, operation FROM lista WHERE Hora = " + (datetime.now()).strftime('%H'))        
-
-                for linha in cursor.fetchall():
+                
+                for linha in cursor.fetchall():                    
                     listaAguardando.append(linha)
+
 
                 cursor.execute("DELETE FROM lista WHERE Hora = " + (datetime.now()).strftime('%H'))
                 conn.commit()
@@ -132,6 +133,13 @@ class estrategias ():
                 for posicoes in listaAguardando:
 
                     if int(posicoes[1]) == _man and _seg < 30:
+                        verificaPayout = []
+                        verificaPayout.append(linha)
+
+                        #verificar payout aqui apo´s armazenar todos as posicoes dessa hora
+                        #após isso abre thread
+                        #separar argumentos da thread para n ser reconhecida como ponteiro de memoria
+
                         t = threading.Thread(target=self.threadAbrePosicao, args=(posicoes))
                         t.start()
                         listaAguardando.pop(i)

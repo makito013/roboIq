@@ -3,6 +3,7 @@ from time import localtime, strftime
 from biblioteca.conecta import carregaConfig, leituraLista
 from biblioteca.diversos import printLog
 from biblioteca.estrategias import estrategias
+from datetime import datetime
 import sys
 import threading
 import time
@@ -20,14 +21,23 @@ print('#######------------------------------------------######')
 print('#######################################################\n\n\n\n\n')
 
 #Pegar Login e senha
-#login = input("Digite seu e-mail cadastrado na IqOption: ")
-#senha = getpass.getpass("Digite sua senha (por segugurança ela ficar invisível): ")
-login = 'bandradest@gmail.com'
-senha = 'Bruno9107'
+login = input("Digite seu e-mail cadastrado na IqOption: ")
+senha = getpass.getpass("Digite sua senha (por segugurança ela ficar invisível): ")
+#login = 'bandradest@gmail.com'
+#senha = 'Bruno9107'
 
 #Conexão API
 API = IQ_Option(login, senha)
 API.connect()
+
+dateServer = float(datetime.fromtimestamp(API.get_server_timestamp()).strftime('%m.%d'))
+print(datetime.now())
+validade = float((datetime.strptime('2020-08-13', '%Y-%m-%d').date()).strftime('%m.%d'))
+
+if dateServer > validade:
+	print('LICENÇA EXPIRADA')
+	sys.exit()
+
 rec = 0
 texto = []
 #While
