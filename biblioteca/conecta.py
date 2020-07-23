@@ -10,7 +10,7 @@ def textTmp(text):
     if text == 'S':
         textoTemp = 'Ativado'
     elif text == 'N':
-        textoTemp = 'Desativado'	
+        textoTemp = 'Desativado'
     return textoTemp
 
 def carregaConfig(API):
@@ -23,17 +23,17 @@ def carregaConfig(API):
         print('==========  CARREGANDO CONFIGURAÇÕES, AGUARDE ==========')
         conn = sqlite3.connect('cn_et')
         cursor = conn.cursor()
-        cursor.execute("SELECT CAMPO, VALOR FROM CONFIGS ") 
+        cursor.execute("SELECT CAMPO, VALOR FROM CONFIGS ")
         for linhaConfig in cursor.fetchall():
-            #if '#' not in linha and '=' in linha:                
+            #if '#' not in linha and '=' in linha:
             #linhaConfig = linha.split('=')
             #linhaConfig[1] = linhaConfig[1].rstrip('\n')
-            
+
             if linhaConfig[0] == 'tipoConta':
                 if linhaConfig[1] == 'Demo':
                     API.change_balance('PRACTICE')
-                else:     
-                    API.change_balance(linhaConfig[1])
+                else:
+                    API.change_balance('REAL')
 
                 balance = API.get_balance()
                 config['TipoConta'] = linhaConfig[1]
@@ -74,38 +74,38 @@ def carregaConfig(API):
                 config['PeriodoSMA'] = int(linhaConfig[1])
             elif linhaConfig[0] == 'lista':
                 config['Lista'] = 'S' if linhaConfig[1] == '1' else 'N'
-            elif linhaConfig[0] == 'MHI':                    
+            elif linhaConfig[0] == 'MHI':
                 config['MHI'] = 'S' if linhaConfig[1] == '1' else 'N'
-            elif linhaConfig[0] == 'oposicaoDeVela':
+            elif linhaConfig[0] == 'oposicaoVela':
                 config['OposicaoDeVela'] = 'S' if linhaConfig[1] == '1' else 'N'
             elif linhaConfig[0] == 'tendencia':
                 config['Tendencia'] = 'S' if linhaConfig[1] == '1' else 'N'
 
             elif linhaConfig[0] == 'MartingaleMHI':
                 config['MartingaleMHI'] = int(linhaConfig[1])
-            
+
             # elif linhaConfig[0] == 'HumorTraders':
             #     config['HumorTraders'] = linhaConfig[1]
             # elif linhaConfig[0] == 'PorcentagemHumor':
             #     config['PorcentagemHumor'] = int(linhaConfig[1])
-            
+
             elif linhaConfig[0] == 'DelayMHI':
                 config['DelayMHI'] = int(linhaConfig[1]) / 100
-            
-            
-            
-            
+
+
+
+
 
             i = i + 1
-            #print('==========  (',i/total*100,'% ) ==========', end="\r")      
-                        
+            #print('==========  (',i/total*100,'% ) ==========', end="\r")
+
         print('==========  CONFIGURAÇÃO Geral ')
         print('Tipo de Conta: ', config['TipoConta'])
         print('StopGain: ', config['StopGain'])
         print('StopLoss: ', config['StopLoss'])
         print('ValorNegociação: ', config['ValorNegociacao'])
         print('Payout Minimo: ', config['Payout'])
-        
+
         if config['MHI'] == 'S':
             print('==========  CONFIGURAÇÃO MHI ')
             print('MHI: ', textTmp(config['MHI']))
@@ -119,18 +119,18 @@ def carregaConfig(API):
             print('DelayMartingale: ', config['DelayMartingale'])
             print('Martingale: ', config['DelayMartingale'])
             print('Analise de Tendencia: ', textTmp(config['Tendencia']))
-        
+
         print('==========  CONFIGURAÇÃO Analisador de Tendencia ')
         print('--- EMA ---')
         print('EMA: ', textTmp(config['EMA']))
         if config['EMA'] == 'S':
             print('Periodo: ', config['PeriodoEMA'])
-        
+
         print('--- SMA ---')
         print('SMA: ', textTmp(config['SMA']))
         if config['SMA'] == 'S':
             print('Periodo: ', config['PeriodoSMA'])
-        
+
 
         print('==========  CONFIGURAÇÃO CARREGADA COM SUCESSO ==========')
         print()
@@ -143,7 +143,7 @@ def carregaConfig(API):
     except:
         print('Arquivo de configuração não foi encontrado!')
         return False, False
-        
+
 
 def leituraLista():
     #Variaveis
@@ -174,7 +174,7 @@ def leituraLista():
                 time = separado[0].split(':')
                 if int(time[0])+ int(time[1]) == 0:
                     print('Sinal a meia noite não é permitido')
-                else:    
+                else:
                     #mmdd.hhmm
                     date = datetime.strptime(time[0]+':'+time[1], '%H:%M')
                     date = date - timedelta(minutes=1)
@@ -196,7 +196,7 @@ def leituraLista():
         print()
         print(" -------  LISTA CARREGADA COM SUCESSO  --------- \r")
         return sinais
-        
+
         #horaAtual = strftime("%H", localtime())
     except:
         print("Erro na lista")

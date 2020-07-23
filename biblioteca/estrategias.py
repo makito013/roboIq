@@ -1,5 +1,5 @@
 sinaisPreparados = {'hora':[], 'minuto':[], 'par':[], 'sinal':[]}
-from time import localtime, strftime
+from time import localtime, strftime, sleep
 #from biblioteca.diversos import salvaTransacaoTXT, salvaOperacaoNaoAbertaTXT
 from biblioteca.tendencias import medias
 from biblioteca import banca
@@ -30,12 +30,12 @@ class estrategias ():
 
         if config['DelayMHI'] != 0:
             tempoDelay = 10 - config['DelayMHI']
-        
+
         while True:
             minutos = float(((datetime.now()).strftime('%M.%S'))[1:])
             entrar = True if (minutos >= (5 - config['DelayMHI']) and minutos <= 5) or minutos >= tempoDelay else False
-            
-            if entrar:        
+
+            if entrar:
                 dir = False
                 velas = API.get_candles(par, 60, 5, time.time())
                 coresFiltro = ''
@@ -43,19 +43,19 @@ class estrategias ():
                 velas[1] = 'g' if velas[1]['open'] < velas[1]['close'] else 'r' if velas[1]['open'] > velas[1]['close'] else 'd'
                 velas[2] = 'g' if velas[2]['open'] < velas[2]['close'] else 'r' if velas[2]['open'] > velas[2]['close'] else 'd'
                 velas[3] = 'g' if velas[3]['open'] < velas[3]['close'] else 'r' if velas[3]['open'] > velas[3]['close'] else 'd'
-                velas[4] = 'g' if velas[4]['open'] < velas[4]['close'] else 'r' if velas[4]['open'] > velas[4]['close'] else 'd'                                
-                
+                velas[4] = 'g' if velas[4]['open'] < velas[4]['close'] else 'r' if velas[4]['open'] > velas[4]['close'] else 'd'
+
                 cores = velas[2] + velas[3] + velas[4]
                 velasLog = velas[0] + velas[1] + velas[2] + velas[3] + velas[4]
 
-                if cores.count('g') > cores.count('r') and cores.count('d') == 0 : dir = 'PUT' 
+                if cores.count('g') > cores.count('r') and cores.count('d') == 0 : dir = 'PUT'
                 if cores.count('r') > cores.count('g') and cores.count('d') == 0 : dir = 'CALL'
-                
-                if dir != False and filtroIndi.verificaIndicadores(par, dir, 1) == False: 
+
+                if dir != False and filtroIndi.verificaIndicadores(par, dir, 1) == False:
                     dir = False
                     print('MHI Não aberto pelo filtro de indicadores')
-                
-                if dir : 
+
+                if dir :
                     status,id = API.buy_digital_spot(par, config['ValorNegociacao'], dir.lower(), 1)
                     if status:
                         print('\nMHI => ABERTO UMA NEGOCIAÇÃO NO \nPAR:', par, '\nDIREÇÃO:',dir,'\nVALOR:', config['ValorNegociacao'], '\n')
@@ -63,7 +63,7 @@ class estrategias ():
                         minutoAnterior = int(((datetime.now()).strftime('%M'))[1:])
                         while True:
                             minutosAtual = int(((datetime.now()).strftime('%M'))[1:])
-                            
+
                             if minutosAtual != minutoAnterior :
                                 minutoAnterior = minutosAtual
                                 #status, valor = API.check_win_digital_v2(id)
@@ -77,25 +77,28 @@ class estrategias ():
 
                                 #if status:
                                 if valor > 0:
-                                    self.logTransacao.append('WIN MHI==> Posição: ' + dir + " || Velas: "+ velasLog + '|| Valor:' + str(config['ValorNegociacao']))                                    
+                                    self.logTransacao.append('WIN MHI==> Posição: ' + dir + " || Velas: "+ velasLog + '|| Valor:' + str(config['ValorNegociacao']))
                                     print('\nWIN MHI==> Posição: ', dir, "Velas: ", velasLog, '\n')
                                     #ganhoTotal = ganhoTotal + valor
                                     break
                                 else:
-                                    self.logTransacao.append('LOSS MHI==> Posição: '+ dir+ "Velas: " + velasLog + '|| VelasFiltro: ' + coresFiltro + ' || Valor:' + str(config['ValorNegociacao']))    
+                                    self.logTransacao.append('LOSS MHI==> Posição: '+ dir+ "Velas: " + velasLog + '|| VelasFiltro: ' + coresFiltro + ' || Valor:' + str(config['ValorNegociacao']))
                                     print('\nLOSS MHI==> Posição: ', dir, "Velas: ", velasLog, '\n')
                                     #ganhoTotal = ganhoTotal + valor
                                     if config['MartingaleMHI'] > m:
                                         status,id = API.buy_digital_spot(par, config['ValorNegociacao']*2, dir.lower(), 1)
-                                        self.logTransacao.append('ABERTO MARTINGALE ' + str(m+1))    
+                                        self.logTransacao.append('ABERTO MARTINGALE ' + str(m+1))
                                         print('\nABERTO MARTINGALE = ', m+1 , '\n')
                                         m = m + 1
                                     else:
                                         break
+                            sleep(0.5)
                     else:
                         print('\nErro ao abrir posição\n')
                 else:
-                    print('\nMHI Posição não aberta Velas: ', velasLog, ' Filtro: ',  coresFiltro ,'\n') 
+                    print('\nMHI Posição não aberta Velas: ', velasLog, ' Filtro: ',  coresFiltro ,'\n')
+        
+            sleep(0.5)
 
     def lista(self):
         listaAguardando = []
@@ -103,7 +106,7 @@ class estrategias ():
         x = 1
         _han = int((datetime.now()).strftime('%H')) - 1
         _man = int((datetime.now()).strftime('%M')) - 1
-        while True:
+        while self.config['continua']:
             #Timer Hora
             #A cada hora atualiza a lista
             _hat = int((datetime.now()).strftime('%H'))
@@ -111,9 +114,9 @@ class estrategias ():
                 _han = _hat
                 conn = sqlite3.connect('robot')
                 cursor = conn.cursor()
-                cursor.execute("SELECT hora, minuto, par, tempo, operation FROM lista WHERE Hora = " + (datetime.now()).strftime('%H'))        
-                
-                for linha in cursor.fetchall():                    
+                cursor.execute("SELECT hora, minuto, par, tempo, operation FROM lista WHERE Hora = " + (datetime.now()).strftime('%H'))
+
+                for linha in cursor.fetchall():
                     listaAguardando.append(linha)
 
 
@@ -139,25 +142,26 @@ class estrategias ():
                         #verificar payout aqui apo´s armazenar todos as posicoes dessa hora
                         #após isso abre thread
                         #separar argumentos da thread para n ser reconhecida como ponteiro de memoria
-
+                        t = None
                         t = threading.Thread(target=self.threadAbrePosicao, args=(posicoes))
                         t.start()
                         listaAguardando.pop(i)
                     i = i + 1
-            
+
 
             #minutos = float(((datetime.now()).strftime('%M.%S'))[1:])
             #entrar = True if (minutos >= (5 - self.config['Delay']) and minutos <= 5) or minutos >= tempoDelay else False
-            
+
             #if hora in lista['hora'] or hora in lista['hora']:
             #    print('Achei Hora')
             #if entrar:
-    
+            sleep(1)
+
     def threadAbrePosicao(self, hora, minuto, par, tempo, operation):
         if self.medias.analisadorTendenciaLista(par, tempo, operation) == False:
             linha = str(hora) + ':' + str(minuto) + ',' + par + ',' + str(tempo) + ',' + operation
             self.texto.append(linha + ' - Operação não realizada por estar contra a tendência')
-            self.logNaoAberto.append(linha + ' - Operação não realizada por estar contra a tendência')  
+            self.logNaoAberto.append(linha + ' - Operação não realizada por estar contra a tendência')
             return
 
         tipoOperacao = self.verificaPayout(par, tempo)
@@ -166,14 +170,15 @@ class estrategias ():
             _tabertura = datetime.strptime(datahora, '%H:%M')
             _tabertura = _tabertura + timedelta(minutes=1) - timedelta(seconds=self.config['Delay'])
             _tabertura = float(_tabertura.strftime('%H%M.%S'))
-            while True:
-                _tatual = float((datetime.now()).strftime('%H%M.%S'))      
-                # and _tatual <= _tabertura          
+            while config['continua']:
+                _tatual = float((datetime.now()).strftime('%H%M.%S'))
+                # and _tatual <= _tabertura
                 entrar = True if (_tatual >= (_tabertura)) else False
 
                 if entrar == True:
+
                     filtroIndi = self.indicadores
-                    if filtroIndi.verificaIndicadores(par, operation, tempo) == False: 
+                    if filtroIndi.verificaIndicadores(par, operation, tempo) == False:
                         self.texto.append('Operação Não aberto pelo filtro de indicadores')
                         #print('Operação Não aberto pelo filtro de indicadores')
                         break
@@ -187,10 +192,10 @@ class estrategias ():
                         status,id = self.API.buy(self.config['ValorNegociacao'], par, operation.lower(), tempo)
                     else:
                         break
-                    
+
                     if status == True:
                         self.texto.append('Aberto negociação em ' + tipoOperacao + ' -> ' + par + ' - ' + str(tempo) + ' - ' + operation)
-                        #print('Aberto negociação -> ', par, '-', tempo, '-', operation)                       
+                        #print('Aberto negociação -> ', par, '-', tempo, '-', operation)
                         _tfinal = float((datetime.now() + timedelta(minutes=tempo) - timedelta(seconds=self.config['DelayMartingale'])).strftime('%H%M.%S'))
                         m = 0
                         while True:
@@ -204,13 +209,13 @@ class estrategias ():
                                     while valor == 0:
                                         if tipoOperacao == 'digital':
                                             status, valor = self.API.check_win_digital_v2(id)
-                                        elif tipoOperacao == 'binario':     
+                                        elif tipoOperacao == 'binario':
                                             valor = self.API.check_win_v3(id)
                                 if valor == None: #Em caso de dodge
                                     valor = 0
 
                                 if valor > 0:
-                                    self.logTransacao.append('WIN LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)  
+                                    self.logTransacao.append('WIN LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)
                                     self.texto.append('WIN LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)
                                     # print('\nWIN LISTA ==> ', par, "||", tempo, 'm ||', operation, '\n')
                                     #ganhoTotal = ganhoTotal + valor
@@ -218,43 +223,45 @@ class estrategias ():
                                 else:
                                     if m == 0:
                                         self.logTransacao.append('LOSS LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)
-                                        self.texto.append('LOSS LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)  
+                                        self.texto.append('LOSS LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)
                                     else:
-                                        self.logTransacao.append('LOSS MARTINGALE '+ m +' LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)
-                                        self.texto.append('LOSS MARTINGALE '+ m +' LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)  
+                                        self.logTransacao.append('LOSS MARTINGALE '+ str(m) +' LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)
+                                        self.texto.append('LOSS MARTINGALE '+ str(m) +' LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)
                                     #print('\nLOSS LISTA ==> ', par, "||", tempo, 'm ||', operation, '\n')
                                     #ganhoTotal = ganhoTotal + valor
-                                    if self.config['Martingale'] > m:
+                                    if self.config['Martingale'] > m and config['continua'] == True:
                                         if tipoOperacao == 'digital':
                                             status,id = self.API.buy_digital_spot(par, self.config['ValorNegociacao']*2, operation.lower(), tempo)
                                         elif tipoOperacao == 'binario':
                                             status,id = self.API.buy(self.config['ValorNegociacao']*2, par, operation.lower(), tempo)
-                                       
+
                                         _tfinal = float((datetime.now() + timedelta(minutes=tempo)).strftime('%H%M.%S')) - self.config['DelayMartingale']
-                                        self.logTransacao.append('ABERTO MARTINGALE ' + str(m+1))  
-                                        self.texto.append('ABERTO MARTINGALE ' + str(m+1))  
+                                        self.logTransacao.append('ABERTO MARTINGALE ' + str(m+1))
+                                        self.texto.append('ABERTO MARTINGALE ' + str(m+1))
                                         #print('\nABERTO MARTINGALE = ', m+1 , '\n')
                                         m = m + 1
                                     else:
                                         break
-                    else:    
+                            sleep(0.5)
+                    else:
                         self.texto.append('Não foi possível abrir a negociação -> ' + par + ' - ' + str(tempo) + ' - ', operation)
                         print('Não foi possível abrir a negociação -> ', par, '-', tempo, '-', operation)
 
                     break
+                sleep(0.5)
 
-    
+
     def verificaPayout(self, par, tempo):
         try:
             _db = False
-        
+
             binario = False
             digital = False
-            _vBinario = 0    
-            _vDigital = 0 
+            _vBinario = 0
+            _vDigital = 0
             parId = self.paresId[par]
             self.API.subscribe_strike_list(par, tempo)
-            time.sleep(2)
+            sleep(2)
             digital = self.API.get_digital_current_profit(par, tempo)
             b = {}
 
@@ -270,7 +277,7 @@ class estrategias ():
                 #print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção digital')
                 #self.logNaoAberto.append('- Par '+par+' Não Disponível na opção digital')
                 _vDigital = 0
-            
+
             if binario == False:
                 #self.texto.append('Par '+par+' Não Disponível na opção binario')
                 #print(strftime("%d/%m/%Y, %H:%M:%S", localtime()), '- Par',par,'Não Disponivel na opção binario')
@@ -310,4 +317,3 @@ class estrategias ():
             #print('Ops, aconteceu algum erro ao abrir a negociação')
             #print('Par:',par, 'Tempo', tempo)
             # print(minuto, par, tempo, operation)
-

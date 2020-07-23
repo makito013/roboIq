@@ -1,16 +1,17 @@
-from time import localtime, strftime
+from time import localtime, strftime, sleep
 import sqlite3
 
 
 
-def printLog(texto, logTransacao, logNotOperacao):
+def printLog(texto, logTransacao, logNotOperacao, config):
     load = '|'
     tempAnterior = False
-    while True:
+    finaliza = False
+    while finaliza == False:
         segundoAtual = int(strftime("%S", localtime()))
         
         if len(texto) > 0:
-            print(strftime("%H:%M:%S", localtime()), '-', texto.pop())   
+            print(strftime("%H:%M:%S", localtime()), '-', texto.pop(0))   
         else:
             if len(logTransacao) > 0 :
                 salvaTransacaoTXT(logTransacao)
@@ -29,6 +30,10 @@ def printLog(texto, logTransacao, logNotOperacao):
                     load = '|'
                     
                 print(load, ' - ', strftime("%H:%M:%S", localtime()) , end="\r")
+
+                if config['continua'] == False:
+                    finaliza = True
+    sleep(0.5)
     #MHITemp = '- MHI Esta procurando oportunidade' if config['MHI'] == 'S' else ''
 	#print(load, ' - ', horaAtual,':', MinutoAtual, ':', segundoAtual, MHITemp, end="\r")
 
@@ -38,7 +43,7 @@ def salvaTransacaoTXT(texto):
     with open('log_Transacoes.txt', 'a') as arquivo:
         conteudo = []
         while len(texto) > 0:
-            conteudo.append('\n' + strftime("%d/%m/%Y, %H:%M:%S", localtime()) + ' - ' + texto.pop())
+            conteudo.append('\n' + strftime("%d/%m/%Y, %H:%M:%S", localtime()) + ' - ' + texto.pop(0))
         arquivo.writelines(conteudo)
         arquivo.close()
         
@@ -46,7 +51,7 @@ def salvaConfigTXT(texto):
     with open('log_Config.txt', 'a') as arquivo:
         conteudo = []
         while len(texto) > 0:
-            conteudo.append('\n' + strftime("%d/%m/%Y, %H:%M:%S", localtime()) + ' - ' + texto.pop())
+            conteudo.append('\n' + strftime("%d/%m/%Y, %H:%M:%S", localtime()) + ' - ' + texto.pop(0))
         arquivo.writelines(conteudo)
         arquivo.close()
 
@@ -54,7 +59,7 @@ def salvaOperacaoNaoAbertaTXT(texto):
     with open('log_OpNA.txt', 'a+') as arquivo:
         conteudo = []
         while len(texto) > 0:
-            conteudo.append('\n' + strftime("%d/%m/%Y, %H:%M:%S", localtime()) + ' - ' + texto.pop())
+            conteudo.append('\n' + strftime("%d/%m/%Y, %H:%M:%S", localtime()) + ' - ' + texto.pop(0))
         arquivo.writelines(conteudo)
         arquivo.close()
 

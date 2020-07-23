@@ -1,1 +1,3 @@
 ta-lib
+numpy==1.19
+cx_freeze==6.1

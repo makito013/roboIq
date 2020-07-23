@@ -5,11 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name":"Python: Arquivo Atual",
-            "type":"python",
-            "request":"launch",
-            "program":"./WinTrader-SuperBot.py",
-            "console":"integratedTerminal"},
-
+            "name": "Arquivo Atual",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "BOT",
+            "type": "python",
+            "request": "launch",
+            "program": "./WinTrader-SuperBot.py",
+            "console": "integratedTerminal"
+        },
     ]
 }
