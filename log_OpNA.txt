@@ -1,0 +1,13 @@
+
+01/08/2020, 00:43:43 - ###### PARABENS STOP GAIN ########## 
+ TOTAL GANHO:100000
+01/08/2020, 00:50:01 - ###### PARABENS STOP GAIN ########## 
+ TOTAL GANHO:100000
+01/08/2020, 01:09:01 - Tendência de Alta
+01/08/2020, 01:09:01 - 1:9,EURUSD-OTC,5,PUT - Operação não realizada por estar contra a tendência
+01/08/2020, 01:09:02 - Tendência de Alta
+01/08/2020, 01:09:02 - 1:9,USDJPY-OTC,5,PUT - Operação não realizada por estar contra a tendência
+01/08/2020, 01:14:01 - Tendência de Alta
+01/08/2020, 01:14:02 - Tendência de Baixa
+01/08/2020, 10:25:01 - ###### PARABENS STOP GAIN ########## 
+ TOTAL GANHO:11073.82

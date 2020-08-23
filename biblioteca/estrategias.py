@@ -170,7 +170,7 @@ class estrategias ():
             _tabertura = datetime.strptime(datahora, '%H:%M')
             _tabertura = _tabertura + timedelta(minutes=1) - timedelta(seconds=self.config['Delay'])
             _tabertura = float(_tabertura.strftime('%H%M.%S'))
-            while config['continua']:
+            while self.config['continua']:
                 _tatual = float((datetime.now()).strftime('%H%M.%S'))
                 # and _tatual <= _tabertura
                 entrar = True if (_tatual >= (_tabertura)) else False
@@ -229,7 +229,7 @@ class estrategias ():
                                         self.texto.append('LOSS MARTINGALE '+ str(m) +' LISTA ==> ' + par + " || "+ str(tempo) + 'm || ' + operation)
                                     #print('\nLOSS LISTA ==> ', par, "||", tempo, 'm ||', operation, '\n')
                                     #ganhoTotal = ganhoTotal + valor
-                                    if self.config['Martingale'] > m and config['continua'] == True:
+                                    if self.config['Martingale'] > m and self.config['continua'] == True:
                                         if tipoOperacao == 'digital':
                                             status,id = self.API.buy_digital_spot(par, self.config['ValorNegociacao']*2, operation.lower(), tempo)
                                         elif tipoOperacao == 'binario':
@@ -244,7 +244,7 @@ class estrategias ():
                                         break
                             sleep(0.5)
                     else:
-                        self.texto.append('Não foi possível abrir a negociação -> ' + par + ' - ' + str(tempo) + ' - ', operation)
+                        self.texto.append('Não foi possível abrir a negociação -> ' + par + ' - ' + str(tempo) + ' - ' + operation)
                         print('Não foi possível abrir a negociação -> ', par, '-', tempo, '-', operation)
 
                     break

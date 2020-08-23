@@ -54,14 +54,14 @@ def carregaConfig(API):
                 if '%' in linhaConfig[1]:
                     config['StopGain'] = (balance * (config['StopGain']/100)) + balance
                 elif '$' in linhaConfig[1]:
-                    config['StopGain'] = config['StopGain'] + balance
+                    config['StopGain'] = round(config['StopGain'] + balance, 2)
             elif linhaConfig[0] == 'stopLoss':
                 config['StopLoss'] = int(linhaConfig[1])
             elif linhaConfig[0] == 'tipoStopLoss':
                 if '%' in linhaConfig[1]:
                     config['StopLoss'] = balance - (balance * (config['StopLoss']/100))
                 elif '$' in linhaConfig[1]:
-                    config['StopLoss'] = balance - config['StopLoss']
+                    config['StopLoss'] = round(balance - config['StopLoss'], 2)
             elif linhaConfig[0] == 'minimoPayout':
                 config['Payout'] = float(linhaConfig[1])
             elif linhaConfig[0] == 'SMA':

@@ -21,9 +21,8 @@ print('#######------------------------------------------######')
 print('#######################################################\n\n\n\n\n')
 
 #Pegar Login e senha
-#login = input("Digite seu e-mail cadastrado na IqOption: ")
-login = 'bandradest@gmail.com'
-senha = 'Bruno9107'
+login = input("Digite seu e-mail cadastrado na IqOption: ")
+senha = getpass.getpass("Digite sua senha (por segurança ela ficar invisível): ")
 
 #Conexão API
 API = IQ_Option(login, senha)
@@ -31,7 +30,7 @@ API.connect()
 
 dateServer = float(datetime.fromtimestamp(API.get_server_timestamp()).strftime('%m.%d'))
 print(datetime.now())
-validade = float((datetime.strptime('2020-08-13', '%Y-%m-%d').date()).strftime('%m.%d'))
+validade = float((datetime.strptime('2020-09-13', '%Y-%m-%d').date()).strftime('%m.%d'))
 
 if dateServer > validade:
 	print('LICENÇA EXPIRADA')
@@ -66,21 +65,11 @@ while config['continua']:
 				#Conexão API
 				API = IQ_Option(login, senha)
 				API.connect()
-			#	API.subscribe_live_deal('live-deal-digital-optio', 'EURJPY','PT1M', 10)
 			else:
 				print('Numero de tentativas excedido')
 		except:
 			print('Erro desconhecido')
 	else:		
-		#time = 'PT1M'
-		#buffersize=10
-		
-		#trades = API.get_live_deal('live-deal-digital-optio', 'EURJPY', 'PT1M')
-
-		#if len(trades) > 0:
-			#entra se tiver alguma posicao sendo aberta
-		#	print(trades)
-
 		if configurado == False:
 			print('####  Conectado com sucesso  ########')
 			print('####  Carregando Configuracao  ########')
@@ -108,7 +97,7 @@ while config['continua']:
 
 			if tempMinAnterior != MinutoAtual:
 				tempMinAnterior = MinutoAtual
-				montanteAtual = 100000#API.get_balance()
+				montanteAtual = API.get_balance()
 				if config['StopGain'] <= montanteAtual:
 					print()
 					print('###### PARABENS STOP GAIN ########## \n TOTAL GANHO:',montanteAtual)
