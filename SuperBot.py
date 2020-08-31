@@ -3,7 +3,7 @@ from time import localtime, strftime, sleep
 from biblioteca.conecta import carregaConfig, leituraLista
 from biblioteca.diversos import printLog
 from biblioteca.estrategias import estrategias
-from datetime import datetime
+from datetime import datetime, timedelta
 import sys
 import threading
 import time
@@ -11,7 +11,6 @@ import getpass
 
 #Variaveis Globais
 ganhoTotal = 0
-
 #Texto de Inicialização
 print('\n\n\n\n#######################################################')
 print('#######------------------------------------------######')

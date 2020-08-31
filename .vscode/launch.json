@@ -15,7 +15,7 @@
             "name": "BOT",
             "type": "python",
             "request": "launch",
-            "program": "./WinTrader-SuperBot.py",
+            "program": "./SuperBot.py",
             "console": "integratedTerminal"
         },
     ]

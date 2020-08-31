@@ -98,14 +98,14 @@ class estrategias ():
                 else:
                     print('\nMHI Posição não aberta Velas: ', velasLog, ' Filtro: ',  coresFiltro ,'\n')
         
-            sleep(0.5)
+            sleep(0.1)
 
     def lista(self):
         listaAguardando = []
 
         x = 1
-        _han = int((datetime.now()).strftime('%H')) - 1
-        _man = int((datetime.now()).strftime('%M')) - 1
+        _han = int((datetime.now()- timedelta(hours=1)).strftime('%H'))
+        _man = int((datetime.now()- timedelta(minutes=1)).strftime('%M'))
         while self.config['continua']:
             #Timer Hora
             #A cada hora atualiza a lista
@@ -119,7 +119,6 @@ class estrategias ():
                 for linha in cursor.fetchall():
                     listaAguardando.append(linha)
 
-
                 cursor.execute("DELETE FROM lista WHERE Hora = " + (datetime.now()).strftime('%H'))
                 conn.commit()
                 conn.close()
@@ -127,7 +126,7 @@ class estrategias ():
 
             #Timer Minuto
             _mat = int((datetime.now()).strftime('%M'))
-            _man = False
+            #_man = False
             if _mat != _man:
                 _man = _mat
 
@@ -136,26 +135,29 @@ class estrategias ():
                 for posicoes in listaAguardando:
 
                     if int(posicoes[1]) == _man and _seg < 30:
+                        minut = 0
+                        if int(posicoes[1]) == 59:
+                            minut = 00
+                        else:
+                            minut = int(posicoes[1]) + 1
+                        
                         verificaPayout = []
                         verificaPayout.append(linha)
-
                         #verificar payout aqui apo´s armazenar todos as posicoes dessa hora
                         #após isso abre thread
                         #separar argumentos da thread para n ser reconhecida como ponteiro de memoria
                         t = None
-                        t = threading.Thread(target=self.threadAbrePosicao, args=(posicoes))
+                        t = threading.Thread(target=self.threadAbrePosicao, args=(posicoes[0], minut, posicoes[2], posicoes[3], posicoes[4]))
                         t.start()
                         listaAguardando.pop(i)
                     i = i + 1
 
-
             #minutos = float(((datetime.now()).strftime('%M.%S'))[1:])
             #entrar = True if (minutos >= (5 - self.config['Delay']) and minutos <= 5) or minutos >= tempoDelay else False
-
             #if hora in lista['hora'] or hora in lista['hora']:
             #    print('Achei Hora')
             #if entrar:
-            sleep(1)
+            sleep(0.1)
 
     def threadAbrePosicao(self, hora, minuto, par, tempo, operation):
         if self.medias.analisadorTendenciaLista(par, tempo, operation) == False:
@@ -168,7 +170,7 @@ class estrategias ():
         datahora = ":".join([str(hora), str(minuto)])
         if tipoOperacao != False:
             _tabertura = datetime.strptime(datahora, '%H:%M')
-            _tabertura = _tabertura + timedelta(minutes=1) - timedelta(seconds=self.config['Delay'])
+            _tabertura = _tabertura - timedelta(seconds=self.config['Delay'])
             _tabertura = float(_tabertura.strftime('%H%M.%S'))
             while self.config['continua']:
                 _tatual = float((datetime.now()).strftime('%H%M.%S'))
@@ -196,8 +198,9 @@ class estrategias ():
                     if status == True:
                         self.texto.append('Aberto negociação em ' + tipoOperacao + ' -> ' + par + ' - ' + str(tempo) + ' - ' + operation)
                         #print('Aberto negociação -> ', par, '-', tempo, '-', operation)
-                        _tfinal = float((datetime.now() + timedelta(minutes=tempo) - timedelta(seconds=self.config['DelayMartingale'])).strftime('%H%M.%S'))
+                        _tfinal = float((datetime.strptime(datahora, '%H:%M') + timedelta(minutes=int(tempo)) - timedelta(seconds=self.config['DelayMartingale'])).strftime('%H%M.%S'))
                         m = 0
+                        vm = 1
                         while True:
                             _tatual = float((datetime.now()).strftime('%H%M.%S'))
                             if _tatual >= _tfinal:
@@ -230,25 +233,25 @@ class estrategias ():
                                     #print('\nLOSS LISTA ==> ', par, "||", tempo, 'm ||', operation, '\n')
                                     #ganhoTotal = ganhoTotal + valor
                                     if self.config['Martingale'] > m and self.config['continua'] == True:
+                                        vm = vm * 2
                                         if tipoOperacao == 'digital':
-                                            status,id = self.API.buy_digital_spot(par, self.config['ValorNegociacao']*2, operation.lower(), tempo)
+                                            status,id = self.API.buy_digital_spot(par, self.config['ValorNegociacao']*(vm), operation.lower(), tempo)
                                         elif tipoOperacao == 'binario':
-                                            status,id = self.API.buy(self.config['ValorNegociacao']*2, par, operation.lower(), tempo)
-
-                                        _tfinal = float((datetime.now() + timedelta(minutes=tempo)).strftime('%H%M.%S')) - self.config['DelayMartingale']
-                                        self.logTransacao.append('ABERTO MARTINGALE ' + str(m+1))
-                                        self.texto.append('ABERTO MARTINGALE ' + str(m+1))
+                                            status,id = self.API.buy(self.config['ValorNegociacao']*(vm), par, operation.lower(), tempo)                                        
+                                        _tfinal = float((datetime.strptime(_tfinal, '%H%M.%S') + timedelta(minutes=int(tempo)) - timedelta(seconds=self.config['DelayMartingale'])).strftime('%H%M.%S'))
+                                        self.logTransacao.append('ABERTO MARTINGALE '+ par + ' ' + str(m+1))
+                                        self.texto.append('ABERTO MARTINGALE '+ par + ' ' + str(m+1))
                                         #print('\nABERTO MARTINGALE = ', m+1 , '\n')
                                         m = m + 1
                                     else:
                                         break
-                            sleep(0.5)
+                            sleep(0.1)
                     else:
                         self.texto.append('Não foi possível abrir a negociação -> ' + par + ' - ' + str(tempo) + ' - ' + operation)
-                        print('Não foi possível abrir a negociação -> ', par, '-', tempo, '-', operation)
+                        #print('Não foi possível abrir a negociação -> ', par, '-', tempo, '-', operation)
 
                     break
-                sleep(0.5)
+                sleep(0.1)
 
 
     def verificaPayout(self, par, tempo):

@@ -117,7 +117,7 @@ def carregaConfig(API):
         if config['Lista'] == 'S':
             print('Delay: ', config['Delay'])
             print('DelayMartingale: ', config['DelayMartingale'])
-            print('Martingale: ', config['DelayMartingale'])
+            print('Martingale: ', config['Martingale'])
             print('Analise de Tendencia: ', textTmp(config['Tendencia']))
 
         print('==========  CONFIGURAÇÃO Analisador de Tendencia ')

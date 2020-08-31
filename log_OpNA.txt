@@ -11,3 +11,6 @@
 01/08/2020, 01:14:02 - Tendência de Baixa
 01/08/2020, 10:25:01 - ###### PARABENS STOP GAIN ########## 
  TOTAL GANHO:11073.82
+31/08/2020, 00:39:05 - - Posição não pode ser aberta pois EURNZD não se encontra disponível
+31/08/2020, 00:46:00 - ###### OPS STOP TENTE OUTRO DIA ########## 
+ TOTAL DA BANCA:11066.82
