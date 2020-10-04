@@ -29,7 +29,7 @@ API.connect()
 
 dateServer = float(datetime.fromtimestamp(API.get_server_timestamp()).strftime('%m.%d'))
 print(datetime.now())
-validade = float((datetime.strptime('2020-09-13', '%Y-%m-%d').date()).strftime('%m.%d'))
+validade = float((datetime.strptime('2020-10-13', '%Y-%m-%d').date()).strftime('%m.%d'))
 
 if dateServer > validade:
 	print('LICENÇA EXPIRADA')

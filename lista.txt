@@ -2,9 +2,9 @@
 # Sinal a meia noite ainda não é permitido
 # horario permitido acima de 00:01
 # Padrão (Hora, Par, Tempo, Sinal)
-01:30,USDJPY,5,PUT
-01:45,EURJPY,5,PUT
-02:10,EURUSD,5,CALL
+23:31,USDJPY,5,PUT
+23:31,EURJPY,5,PUT
+23:31,EURUSD,5,CALL
 02:50,USDCAD,5,PUT
 02:55,EURUSD,5,CALL
 04:00,GBPUSD,5,CALL

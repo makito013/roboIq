@@ -203,6 +203,7 @@ class estrategias ():
                         vm = 1
                         while True:
                             _tatual = float((datetime.now()).strftime('%H%M.%S'))
+                            _tabertura = datetime.now()
                             if _tatual >= _tfinal:
                                 valor = 0
                                 velas = self.API.get_candles(par, 60 * tempo, 1, time.time())
@@ -238,7 +239,7 @@ class estrategias ():
                                             status,id = self.API.buy_digital_spot(par, self.config['ValorNegociacao']*(vm), operation.lower(), tempo)
                                         elif tipoOperacao == 'binario':
                                             status,id = self.API.buy(self.config['ValorNegociacao']*(vm), par, operation.lower(), tempo)                                        
-                                        _tfinal = float((datetime.strptime(_tfinal, '%H%M.%S') + timedelta(minutes=int(tempo)) - timedelta(seconds=self.config['DelayMartingale'])).strftime('%H%M.%S'))
+                                        _tfinal = float((_tabertura + timedelta(minutes=int(tempo)) - timedelta(seconds=self.config['DelayMartingale'])).strftime('%H%M.%S'))
                                         self.logTransacao.append('ABERTO MARTINGALE '+ par + ' ' + str(m+1))
                                         self.texto.append('ABERTO MARTINGALE '+ par + ' ' + str(m+1))
                                         #print('\nABERTO MARTINGALE = ', m+1 , '\n')
